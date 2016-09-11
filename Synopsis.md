@@ -53,10 +53,57 @@ the program should output:
 
 ## Refactor
 
+    type Price = Double
+
+    totalPrice :: Price -> Price
+    totalPrice p = p * 1.0685
+
     process :: (String -> String) -> IO ()
     process f = interact (unlines . map f . lines )
 
     main :: IO ()
-    main = process (show . (*1.0685) . read)
+    main = process (show . totalPrice . read)
+
+## Slice 4
+
+    readPrice :: String -> [Price]
+    readPrice = map fst . reads
+
+    showPrice :: [Price] -> String
+    showPrice [p] = show p
+    showPrice []  = "not a correct price"
+
+    main :: IO ()
+    main = process (showPrice . map totalPrice . readPrice)
+
+## Refactoring
+
+    type FPrice = [Price]
+
+    fMap :: (Price -> Price) -> (FPrice -> FPrice)
+    fMap = map
+
+    readPrice :: String -> FPrice
+    readPrice = map fst . reads
+
+    showPrice :: FPrice -> String
+    showPrice [p] = show p
+    showPrice []  = "not a correct price"
+
+    main :: IO ()
+    main = process (showPrice . fMap totalPrice . readPrice)
+
+## Refactoring to prepare for second argument
+
+    type Quantity = Integer
+
+    totalPrice :: Quantity -> Price -> Price
+    totalPrice q p = fromInteger q * p * 1.0685
+
+    main :: IO ()
+    main = process (showPrice . fMap (totalPrice 1) . readPrice)
+
+
+
 
 

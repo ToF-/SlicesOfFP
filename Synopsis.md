@@ -107,6 +107,21 @@ the program should output:
     totalPrice :: [String] -> [Price]
     totalPrice [q,p] = map taxIncluded (app (map total (readQuantity q)) (readPrice p))
         where 
-            app :: [a -> b] -> [a] -> [b]
             app [f] a = map f a
             app []  _ = []
+
+## Refactoring
+
+    app :: [a -> b] -> [a] -> [b]
+    app f a = concat (map (\g -> map g a) f)
+
+    app (map (*) [42]) [5] ⏎
+    [210]
+    (*) `map` [42] `app` [5] ⏎
+    [210]
+    (*) `map` [42] `app` [] ⏎
+    []
+    (*) `map` [] `app` [5] ⏎
+    []
+    (*) `map` [] `app` [] ⏎
+    []

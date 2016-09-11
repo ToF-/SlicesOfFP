@@ -10,10 +10,9 @@ total q p = fromInteger q * p
 
 totalPrice :: [String] -> [Price]
 totalPrice [q,p] = map taxIncluded (app (map total (readQuantity q)) (readPrice p))
-    where 
-        app :: [a -> b] -> [a] -> [b]
-        app [f] a = map f a
-        app []  _ = []
+
+app :: [a -> b] -> [a] -> [b]
+app f a = concat (map (\g -> map g a) f)
 
 main :: IO ()
 main = process (showPrice . totalPrice . words) 

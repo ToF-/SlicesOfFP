@@ -1,0 +1,43 @@
+# Synopsis
+
+## Product
+Accept 3 inputs from the user:
+
+- How many items
+- Price per item
+- 2-letter state code
+
+Output the total price. Give a discount based on the total price, add state tax based on the state and the discounted price.
+
+    +-------------+---------------+    +-------+----------+
+    | Order Value | Discount Rate |    | State | Tax Rate |
+    +-------------+---------------+    +-------+----------+
+    |   $1,000    |       3%      |    |  UT   |  6.85%   |
+    |   $5,000    |       5%      |    |  NV   |  8.00%   |
+    |   $7,000    |       7%      |    |  TX   |  6.25%   |
+    |   $10,000   |       10%     |    |  AL   |  4.00%   |
+    |   $50,000   |       15%     |    |  CA   |  8.25%   |
+    +-------------+---------------+    +-------+----------+
+
+### Additional Constraints
+
+Make the total price rounded to the nearest cent.
+
+The program runs in a terminal and should continually read the imput, and output calculated total price.
+
+The program shouldn't halt, but signal any error in input.
+
+### Example
+
+Given this input:
+
+    1 42 UT
+    1000 42 CA
+
+the program should output:
+
+    44.88
+    40918.5
+
+
+

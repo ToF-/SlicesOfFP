@@ -103,6 +103,13 @@ the program should output:
     main :: IO ()
     main = process (showPrice . fMap (totalPrice 1) . readPrice)
 
+## Slice 5
+
+
+    main = process (showPrice . (\[q,p] -> fMap (totalPrice (read q)) (readPrice p)). words)
+
+##  Refactoring
+
 
 
 

@@ -39,5 +39,17 @@ the program should output:
     44.88
     40918.5
 
+## Slice 1
+
+    main = interact id
+
+## Slice 2
+
+    main = interact (show . (*1.0685) . read)
+
+## Slice 3
+
+    main = interact (unlines . map (show . (*1.0685) . read) . lines)
+
 
 

@@ -55,62 +55,58 @@ the program should output:
 
     type Price = Double
 
-    totalPrice :: Price -> Price
-    totalPrice p = p * 1.0685
+    taxIncluded :: Price -> Price
+    taxIncluded p = p * 1.0685
 
     process :: (String -> String) -> IO ()
     process f = interact (unlines . map f . lines )
 
     main :: IO ()
-    main = process (show . totalPrice . read)
+    main = process (show . taxIncluded . read)
 
 ## Slice 4
 
     readPrice :: String -> [Price]
-    readPrice = map fst . reads
+    readPrice s = case reads s of
+        [(v,_)] -> v
+        []      -> []
 
     showPrice :: [Price] -> String
     showPrice [p] = show p
     showPrice []  = "not a correct price"
 
     main :: IO ()
-    main = process (showPrice . map totalPrice . readPrice)
-
-## Refactoring
-
-    type FPrice = [Price]
-
-    fMap :: (Price -> Price) -> (FPrice -> FPrice)
-    fMap = map
-
-    readPrice :: String -> FPrice
-    readPrice = map fst . reads
-
-    showPrice :: FPrice -> String
-    showPrice [p] = show p
-    showPrice []  = "not a correct price"
-
-    main :: IO ()
-    main = process (showPrice . fMap totalPrice . readPrice)
+    main = process (showPrice . map taxIncluded . readPrice)
 
 ## Refactoring to prepare for second argument
 
-    type Quantity = Integer
+    taxIncluded :: Price -> Price
+    taxIncluded p = p * 1.0685
 
-    totalPrice :: Quantity -> Price -> Price
-    totalPrice q p = fromInteger q * p * 1.0685
+    total :: Quantity -> Price -> Price
+    total q p = fromInteger q * p
 
     main :: IO ()
-    main = process (showPrice . fMap (totalPrice 1) . readPrice)
+    main = process (showPrice . map (taxIncluded . (total 1)) . readPrice)
 
 ## Slice 5
 
 
-    main = process (showPrice . (\[q,p] -> fMap (totalPrice (read q)) (readPrice p)). words)
+    main = process (showPrice . (\[q,p] -> map (taxIncluded . (total (read q)) (readPrice p)) . words) 
 
 ##  Refactoring
 
+    totalPrice :: [String] -> [Price]
+    totalPrice [q,p] = map taxIncluded (map (total (read q)) (readPrice p))
+
+    main = process (showPrice . totalPrice . words) 
+
+## Slice 6
 
 
-
-
+    totalPrice :: [String] -> [Price]
+    totalPrice [q,p] = map taxIncluded (app (map total (readQuantity q)) (readPrice p))
+        where 
+            app :: [a -> b] -> [a] -> [b]
+            app [f] a = map f a
+            app []  _ = []

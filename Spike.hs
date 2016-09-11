@@ -1,26 +1,33 @@
-
 type Price = Double
 type Quantity = Integer
 
-totalPrice :: Quantity -> Price -> Price
-totalPrice q p = fromInteger q * p * 1.0685
+taxIncluded :: Price -> Price
+taxIncluded p = p * 1.0685
 
-type FPrice = [Price]
-type FQuantity = [Quantity]
+total :: Quantity -> Price -> Price
+total q p = fromInteger q * p
 
-fMap :: (Price -> Price) -> (FPrice -> FPrice)
-fMap = map
 
-readPrice :: String -> FPrice
+totalPrice :: [String] -> [Price]
+totalPrice [q,p] = map taxIncluded (app (map total (readQuantity q)) (readPrice p))
+    where 
+        app :: [a -> b] -> [a] -> [b]
+        app [f] a = map f a
+        app []  _ = []
+
+main :: IO ()
+main = process (showPrice . totalPrice . words) 
+
+readPrice :: String -> [Price]
 readPrice = map fst . reads
 
-showPrice :: FPrice -> String
+readQuantity :: String -> [Quantity]
+readQuantity = map fst . reads
+
+showPrice :: [Price] -> String
 showPrice [p] = show p
 showPrice []  = "not a correct price"
 
 process :: (String -> String) -> IO ()
 process f = interact (unlines . map f . lines )
-
-main :: IO ()
-main = process (showPrice . (\[q,p] -> fMap (totalPrice (read q)) (readPrice p)). words)
 

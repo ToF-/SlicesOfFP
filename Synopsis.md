@@ -41,17 +41,25 @@ the program should output:
 
 ## Slice 1
 
+Write a program that copies input to output using `interact :: (String -> String) -> IO ()` and `id :: a -> a`
+
     main = interact id
 
 ## Slice 2
+
+Using `read :: Read a => String -> a`, `show :: Show a => a -> String`, sections and function composition, write a program that convert input into a number, adds a tax rate of 6.85%, then display the result.
 
     main = interact (show . (*1.0685) . read)
 
 ## Slice 3
 
+Using `lines :: String -> [String]` and `unlines :: [String] -> String` and `map :: (a -> b) -> [a] -> [b]`, have the program treat each line as an input for price calculation. 
+
     main = interact (unlines . map (show . (*1.0685) . read) . lines)
 
 ## Refactor
+
+Separate concerns. Document types.
 
     type Price = Double
 
@@ -66,6 +74,8 @@ the program should output:
 
 ## Slice 4
 
+Using `reads :: Read a => ReadS a` and pattern matching, write a program that doesn't halt when input is not a valid number.
+
     readPrice :: String -> [Price]
     readPrice s = case reads s of
         [(v,_)] -> v
@@ -73,7 +83,7 @@ the program should output:
 
     showPrice :: [Price] -> String
     showPrice [p] = show p
-    showPrice []  = "not a correct price"
+    showPrice []  = "oops"
 
     main :: IO ()
     main = process (showPrice . map taxIncluded . readPrice)
@@ -124,4 +134,4 @@ the program should output:
     (*) `map` [] `app` [5] ⏎
     []
     (*) `map` [] `app` [] ⏎
-    []
+    

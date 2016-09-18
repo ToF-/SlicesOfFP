@@ -89,3 +89,9 @@ Objectives:
     - Applicative Functors
     - Monads  
     
+    TODO :
+
+    [ ] Trouver un challenge pour chaque chapitre
+    [ ] Présentation de HSpec
+    [ ] Présentation de GHCi (surtout :type)
+    [ ] Faire l'application / exercice

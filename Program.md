@@ -42,6 +42,58 @@ Puis dans le terminal :
     ./hello ⏎
     hello, world!
 
+## 2. Typage fort
 
+2.1 Type = collections de valeurs, e.g. `Bool` ou `(Char, Bool)`
+
+2.2 Type = règles et applications possibles sur les valeurs
+
+    sin True ⏎
+        No instance for (Floating Bool) arising from a use of ‘sin’
+        In the expression: sin True
+        In an equation for ‘it’: it = sin True
+
+    True + 3 ⏎
+        No instance for (Num Bool) arising from a use of ‘+’
+        n the expression: True + 3
+        In an equation for ‘it’: it = True + 3
     
+2.3 Type = manière de penser un problème
 
+Écrivez une fonction qui compare deux dates :
+
+    compDate 20160920 20160531 ⏎
+    1
+    compDate 20160920 20160920 ⏎
+    0
+    compDate 20160920 20170920 ⏎
+    -1
+
+### `:info` et `:type`
+
+## Pattern Matching
+
+1. Éviter les enchaînements de `if then else`
+
+    fact n = if n == O then 1 else n * fact (n-1)
+
+Modifier `fact` de façon que e.g `fact (-1)` produise une erreur (`error "fact with negative arg")
+
+    fact 0 = 1
+    fact n | n < 0 = error "fact with negative arg"
+    fact n = n * fact (n-1)
+
+2. Déconstruire des valeurs structurées
+
+    let [(a,s)] = lex "foo bar qix" ⏎
+    a ⏎
+    "foo"
+    s ⏎
+    " bar qix"
+
+Écrivez une fonction `sum` qui somme tous les nombres d'une liste
+
+    (1:[]) ⏎
+    [1]
+    (1:2:[3,4]) ⏎
+    [1,2,3,4]

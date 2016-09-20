@@ -77,7 +77,7 @@ Puis dans le terminal :
 
     fact n = if n == O then 1 else n * fact (n-1)
 
-Modifier `fact` de façon que e.g `fact (-1)` produise une erreur (`error "fact with negative arg")
+Modifier `fact` de façon que e.g `fact (-1)` produise une erreur (`error "fact with negative arg"`)
 
     fact 0 = 1
     fact n | n < 0 = error "fact with negative arg"

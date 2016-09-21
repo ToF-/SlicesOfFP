@@ -71,7 +71,7 @@ Puis dans le terminal :
 
 ### `:info` et `:type`
 
-## Pattern Matching
+## 3. Pattern Matching
 
 1. Éviter les enchaînements de `if then else`
 
@@ -91,9 +91,28 @@ Modifier `fact` de façon que e.g `fact (-1)` produise une erreur (`error "fact 
     s ⏎
     " bar qix"
 
-Écrivez une fonction `sum` qui somme tous les nombres d'une liste
-
     (1:[]) ⏎
     [1]
     (1:2:[3,4]) ⏎
     [1,2,3,4]
+
+Écrivez une fonction `sum` qui somme tous les nombres d'une liste
+
+## 4. Fonctions comme valeurs
+
+1. Améliorer la modularité et la composabilité
+
+    filter (\n -> n >= 100) [42, 170, 4807, 25] ⏎
+    [170, 4807]
+
+    let price (_, _, pr) = pr
+    let qty (_, qt, _)   = qt
+    let id  (i, _, _)    = i
+    let items = [("AP", 42, 100.00), ("BA", 23, 250.00), ("CH", 18, 349.32)]
+    map price items
+    [100.00, 250.00, 349.32]
+    map qty items
+    [42, 23, 18]
+    zipWith (*) (map price items) (map qty items)
+    map (\item -> price item * qty item) items
+

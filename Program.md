@@ -1,3 +1,5 @@
+Fil rouge : autour du kata poker hand - évaluation d'une main de poker
+
 ## 1. Programme = Évaluation de fonction
 
 1.1 Écrivez une fonction `square` telle que e.g l'expression `square 3` est évaluée à `9` et l'expression `square 42 == 1764` est évaluée à `True`.  
@@ -60,14 +62,25 @@ Puis dans le terminal :
     
 2.3 Type = manière de penser un problème
 
-Écrivez une fonction qui compare deux dates :
+Ecrivez une fonction qui permet de comparer deux cartes au jeu de poker.
+- une carte de rang supérieur bat une carte de rang inférieur
+- valeurs des rangs par ordre croissant : 2,3,4,5,6,7,8,9,10,jack,queen,king,ace
+- deux cartes de couleurs differentes mais de même rang, sont considérées de même valeur
+- valeurs des couleurs: hearts,spades,diamonds,clubs
 
-    compDate 20160920 20160531 ⏎
-    1
-    compDate 20160920 20160920 ⏎
-    0
-    compDate 20160920 20170920 ⏎
-    -1
+Comment représenter une carte ?
+    
+Quelle est la meilleure représentation ?
+
+    type Card = [String]
+    type Card = (Char,Char)
+    type Card = (Int,Char)
+    type Card = (Int,Int)
+    data Rank = Two,Three,Four,Five,Six,Seven,Eight,Nine,Ten,Jack,Queen,King,Ace
+    data Suit = Hearts, Spades, Diamonds, Clubs
+    type Card = (Rank,Suit)
+        
+
 
 ### `:info` et `:type`
 
@@ -96,23 +109,17 @@ Modifier `fact` de façon que e.g `fact (-1)` produise une erreur (`error "fact 
     (1:2:[3,4]) ⏎
     [1,2,3,4]
 
-Écrivez une fonction `sum` qui somme tous les nombres d'une liste
+Écrivez une fonction `flush :: [Card] -> Bool` qui renvoie `True` si toutes les cartes d'une main ont la même couleur.
 
 ## 4. Fonctions comme valeurs
 
 1. Améliorer la modularité et la composabilité
 
-    filter (\n -> n >= 100) [42, 170, 4807, 25] ⏎
-    [170, 4807]
+    sortBy (flip compare) $ map (\n -> (length n, head n)) $ group $ sort $ map rank m
 
-    let price (_, _, pr) = pr
-    let qty (_, qt, _)   = qt
-    let id  (i, _, _)    = i
-    let items = [("AP", 42, 100.00), ("BA", 23, 250.00), ("CH", 18, 349.32)]
-    map price items
-    [100.00, 250.00, 349.32]
-    map qty items
-    [42, 23, 18]
-    zipWith (*) (map price items) (map qty items)
-    map (\item -> price item * qty item) items
+## 5. Transparence référentielle et immutabilité
+
+## 6. Evaluation paresseuse
+
+## 7. Currification
 

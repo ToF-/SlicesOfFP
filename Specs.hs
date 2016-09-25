@@ -8,6 +8,9 @@ type Card = (Rank,Suit)
 rank :: Card -> Rank
 rank (r,_) = r
 
+maxRank [c] = rank c
+maxRank (c:cs) | rank c > maxRank cs = rank c
+                | otherwise = maxRank cs
 
 main = hspec $ describe "" $ do
         it "" $ do
@@ -18,3 +21,5 @@ main = hspec $ describe "" $ do
             rank (Three,'D') `shouldBe` Three
         it "compare" $ do
             Two < Three `shouldBe` True
+        it "high card" $ do
+            maxRank [(Two,'C'),(As,'D'),(Three,'C')] `shouldBe` As

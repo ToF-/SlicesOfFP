@@ -1,3 +1,7 @@
 import Test.Hspec
 
-main = 2 `shouldBe` 3
+main = hspec $ describe "" $ do
+        it "" $ do
+            sqrt (9 * 9) `shouldBe` 9
+            sqrt 9 * 9 `shouldBe` 27
+

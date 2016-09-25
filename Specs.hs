@@ -8,9 +8,7 @@ type Card = (Rank,Suit)
 rank :: Card -> Rank
 rank (r,_) = r
 
-maxRank [c] = rank c
-maxRank (c:cs) | rank c > maxRank cs = rank c
-                | otherwise = maxRank cs
+maxRank cs = maximum $ map rank cs
 
 main = hspec $ describe "" $ do
         it "" $ do

@@ -1,14 +1,23 @@
 import Test.Hspec
+import Data.List
 
 data Rank = Two | Three | As
     deriving (Eq, Show, Ord)
 type Suit = Char
 type Card = (Rank,Suit)
+type Hand = [Card]
 
 rank :: Card -> Rank
-rank (r,_) = r
+rank = fst
 
-maxRank cs = maximum $ map rank cs
+maxRank = maximum . map rank
+
+
+groupByRank :: Hand -> [(Int,Rank)]
+groupByRank = rsort . map (\g -> (length g, head g)) . group . sort . map rank
+    where
+        rsort :: (Ord a) => [a] -> [a]
+        rsort = reverse . sort
 
 main = hspec $ describe "" $ do
         it "" $ do

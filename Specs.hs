@@ -1,8 +1,11 @@
 import Test.Hspec
 
-type Card = (Int,Char)
+data Rank = Two | Three | As
+    deriving (Eq, Show)
+type Suit = Char
+type Card = (Rank,Suit)
 
-rank :: Card -> Int
+rank :: Card -> Rank
 rank (r,_) = r
 
 
@@ -11,6 +14,6 @@ main = hspec $ describe "" $ do
             sqrt (9 * 9) `shouldBe` 9
             sqrt 9 * 9 `shouldBe` 27
         it "" $ do
-            rank (2,'C') `shouldBe` 2
-            rank (4,'D') `shouldBe` 4
+            rank (Two,'C') `shouldBe` Two
+            rank (Three,'D') `shouldBe` Three
 

@@ -1,7 +1,7 @@
 import Test.Hspec
 
 data Rank = Two | Three | As
-    deriving (Eq, Show)
+    deriving (Eq, Show, Ord)
 type Suit = Char
 type Card = (Rank,Suit)
 
@@ -16,4 +16,5 @@ main = hspec $ describe "" $ do
         it "" $ do
             rank (Two,'C') `shouldBe` Two
             rank (Three,'D') `shouldBe` Three
-
+        it "compare" $ do
+            Two < Three `shouldBe` True

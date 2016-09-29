@@ -1,4 +1,22 @@
+## Écrire un test
+
+    main = hspec $ do
+        describe "sqrt" $ do
+            it "should yield the square root of a number" $ do
+            let sr = sqrt 9
+            sr * sr `shouldBe` 9 
+        import Test.Hspec
+    
+    runhaskell Specs.hs ⏎
+    sqrt
+        should yield the square root of a number
+
+    Finished in 0.0012 seconds
+    1 example, 0 failures 
+
 ## 0. Comment écrire un test
+
+
 
 shouldBe
 

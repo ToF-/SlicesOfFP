@@ -23,18 +23,56 @@
 
                 <!-- ALL SLIDES GO HERE -->
                 <!-- Each section element contains an individual slide -->
+                <!-- 000 -->
                 <section>
                     <h1>Tranches de Programmation Fonctionnelle</h1>
                 </section>
+                <!-- 001 -->
                 <section>
                     <h2>Ecrire un test</h2>
                     <pre><code>
 import Test.Hspec
 
-main = hspec $ do
+main = hspec (describe "a test" (it "should pass" (2+2  `shouldBe` 4)))
+                    </code></pre>
+                    <pre><code>
+import Test.Hspec
+
+main = hspec $ 
+    describe "a test" $ 
+        it "should pass" $ 
+            2+2  `shouldBe` 4
+                    </code></pre>
+                </section>
+                <section>
+
+                    <h2>Ecrire une suite de tests</h2>
+                    <pre><code>
+import Test.Hspec
+
+main = hspec $ 
+    describe "a test" ((it "should pass" ( 2+2  `shouldBe` 4)) 
+                    >> (it "should not fail" (2*2 `shouldBe` 4)))
+                    </code></pre>
+                    <pre><code>
+import Test.Hspec
+
+main = hspec $ 
     describe "a test" $ do
         it "should pass" $ do
-            2 + 2 `shouldBe` 4
+            2+2  `shouldBe` 4
+        
+        it "should not fail" $ do
+            2*2 `shouldBe` 4
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Ecrire une fonction</h2>
+                    <pre><code>
+main = hspec $ do
+    describe "maxRank" $ do
+        it "should determine the max of two cards according to rank value" $ do
+            maxCard "7D" "8D"  `shouldBe` "8D"
                     </code></pre>
                 </section>
             </div>

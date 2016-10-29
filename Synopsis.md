@@ -1,5 +1,23 @@
 # Synopsis
 ## 1. Program == Function Evaluation
+evaluate some functions
+    
+    sqrt 1764 ⏎
+
+    Data.List.subsequences "ABCD" ⏎
+
+    subtract 2 44 ⏎
+
+    subtract 1 (subtract 1 44) ⏎
+
+    6 * (3 + 4) ⏎
+
+    (*) 6 ((+) 3 4) ⏎
+
+    Data.List.insert 42 [1,32,87] ⏎
+    
+    
+    
 ### An Expression
 ### A Function Evaluation
 ### A Function Definition

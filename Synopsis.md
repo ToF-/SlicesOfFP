@@ -71,10 +71,69 @@ Running the test:
             it "should not fail" $do
                 2*2 `shouldBe` 4
 
-## 2. Types == Design Helpers
+## 2. Pattern Matching 
+
+### Expressing distinct cases
+
+    response 'Y' = True
+    response 'y' = True
+    response 'N' = False
+    response 'n' = False
+
+    average []  = 0
+    average l   = sum l / length l
+
+### Deconstructing Data
+
+    isOrdered [a,b]   = a <= b
+    isOrdered [a,b,c] = isOrdered [a,b] && isOrdered [b,c]
+
+    product []     = 1
+    product (x:xs) = x * product xs
+
+### Write a function that passes this test:
+
+    import Test.Hspec
+    main = hspec $ do
+        describe "rank" $ do
+            it "should yield the rank of a card" $ do
+                rank "8H"  `shouldBe` '8'
+                rank "AH"  `shouldBe` 'A'
+
+### Write a function that passes this test:
+
+    import Test.Hspec
+    main = hspec $ do
+        describe "suit" $ do
+            it "should yield the suit of a card" $ do
+                suit "8H"  `shouldBe` 'H'
+                suit "AD"  `shouldBe` 'D'
+
+### Comparing values
+
+    compare 42 17 ⏎
+    compare 17 42 ⏎
+    compare 11 11 ⏎
+
+    compare "cat" "dog" ⏎
+
+### Write a function that passes this test:
+
+    describe "comparingRank" $ do
+        it "should compare cards based on rank" $ do
+            compareRanks '8' '6'  `shouldBe` GT
+            compareRanks '4' '4'  `shouldBe` EQ
+            compareRanks '9' 'T'  `shouldBe` LT 
+            compareRanks 'T' 'J'  `shouldBe` LT 
+            compareRanks 'J' 'Q'  `shouldBe` LT 
+            compareRanks 'Q' 'K'  `shouldBe` LT 
+            compareRanks 'K' 'A'  `shouldBe` LT 
+
+
+## 3. Types == Design Helpers
 ### Types as ways to validate a construct
 ### Types as ways to think about a problem
-## 3. Pattern Matching 
+## 2. Pattern Matching 
 ### Expressing distinct cases
 ### Deconstructing Data
 ## 4. Functions as Values

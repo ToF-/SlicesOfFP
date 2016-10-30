@@ -117,25 +117,85 @@ Running the test:
 
     compare "cat" "dog" ⏎
 
-### Write a function that passes this test:
+### Write what is required to pass this test
 
-    describe "comparingRank" $ do
+    describe "compareRanks" $ do
         it "should compare cards based on rank" $ do
-            compareRanks '8' '6'  `shouldBe` GT
-            compareRanks '4' '4'  `shouldBe` EQ
-            compareRanks '9' 'T'  `shouldBe` LT 
-            compareRanks 'T' 'J'  `shouldBe` LT 
-            compareRanks 'J' 'Q'  `shouldBe` LT 
-            compareRanks 'Q' 'K'  `shouldBe` LT 
-            compareRanks 'K' 'A'  `shouldBe` LT 
-
+            compare (rank (card "8D")) (rank (card "6H"))  `shouldBe` GT
+            compare (rank (card "4D")) (rank (card "4H"))  `shouldBe` EQ
+            compare (rank (card "9D")) (rank (card "TH"))  `shouldBe` LT 
+            compare (rank (card "TD")) (rank (card "JH"))  `shouldBe` LT 
+            compare (rank (card "JD")) (rank (card "QH"))  `shouldBe` LT 
+            compare (rank (card "QD")) (rank (card "KH"))  `shouldBe` LT 
+            compare (rank (card "KD")) (rank (card "AH"))  `shouldBe` LT 
 
 ## 3. Types == Design Helpers
 ### Types as ways to validate a construct
-### Types as ways to think about a problem
-## 2. Pattern Matching 
-### Expressing distinct cases
-### Deconstructing Data
+
+    type Card = String -- a non scalar type  
+    type Rank = Char   -- a scalar type
+    type Suit = Char
+
+    rank :: Card -> Rank
+    suit :: Card -> Suit
+
+    compareRanks -> Rank -> Rank -> Ord
+
+`"#@%"` is a valid `String` value. Is it a valid `Card` value?
+
+What is the result of `compareRanks '$' 'K' ?
+
+### A (slightly) better product type
+ 
+    type Card = (Rank, Suit) -- a product type
+    type Rank = Char
+    type Suit = Char
+
+    rank = fst
+    suit = snd
+
+What makes `(Rank,Suit)` better than `String`?
+
+### Write the `card` function
+
+    import Test.Hspec
+    main = hspec $ do
+        describe "rank" $ do
+            it "should yield the rank of a card" $ do
+                rank (card "8H")  `shouldBe` '8'
+                rank (card "AH")  `shouldBe` 'A'
+
+        describe "suit" $ do
+            it "should yield the suit of a card" $ do
+                suit (card "8H")  `shouldBe` 'H'
+                suit (card "AD")  `shouldBe` 'D'
+
+### Types as a way to think about a problem
+
+    data Suit = Hearts | Clubs | Diamonds | Spades -- an union type
+        deriving (Eq, Show)
+
+    data Rank = Two | Three | Four | Five | Six | Seven | Eight | Nine 
+              | Ten | Jack | Queen | King | Ace
+        deriving (Eq, Ord, Show)
+
+### New types mean new tests
+
+    describe "rank" $ do
+        it "should yield the first half of a card" $ do
+            rank (card "8H")  `shouldBe` Eight
+            rank (card "AH")  `shouldBe` Ace
+    describe "suit" $ do
+        it "should yield the suit of a card" $ do
+            suit (card "8H")  `shouldBe` Hearts
+            suit (card "AD")  `shouldBe` Diamonds
+
+    describe "comparingRank" $ do
+        it "should compare cards based on rank" $ do
+            compare Eight Six `shouldBe` GT
+            compare Ace Ace  `shouldBe` EQ
+            compare Queen King `shouldBe` LT 
+
 ## 4. Functions as Values
 ### Passing Functions 
 ### Combining Functions

@@ -1,35 +1,60 @@
 import Test.Hspec
 import Data.Char 
+
+data Suit = Hearts | Clubs | Diamonds | Spades -- an union type
+    deriving (Eq, Show)
+
+data Rank = Two | Three | Four | Five | Six | Seven | Eight | Nine 
+          | Ten | Jack | Queen | King | Ace
+    deriving (Eq, Ord, Show)
+
+type Card = (Rank,Suit)
+
 main = hspec $ do
     describe "rank" $ do
         it "should yield the first half of a card" $ do
-            rank "8H"  `shouldBe` '8'
-            rank "AH"  `shouldBe` 'A'
+            rank (card "8H")  `shouldBe` Eight
+            rank (card "AH")  `shouldBe` Ace
     describe "suit" $ do
         it "should yield the suit of a card" $ do
-            suit "8H"  `shouldBe` 'H'
-            suit "AD"  `shouldBe` 'D'
+            suit (card "8H")  `shouldBe` Hearts
+            suit (card "AD")  `shouldBe` Diamonds
 
-    describe "comparingRank" $ do
+    describe "compareRanks" $ do
         it "should compare cards based on rank" $ do
-            compareRanks '8' '6'  `shouldBe` GT
-            compareRanks '4' '4'  `shouldBe` EQ
-            compareRanks '9' 'T'  `shouldBe` LT 
-            compareRanks 'T' 'J'  `shouldBe` LT 
-            compareRanks 'J' 'Q'  `shouldBe` LT 
-            compareRanks 'Q' 'K'  `shouldBe` LT 
-            compareRanks 'K' 'A'  `shouldBe` LT 
+            compare (rank (card "8D")) (rank (card "6H"))  `shouldBe` GT
+            compare (rank (card "4D")) (rank (card "4H"))  `shouldBe` EQ
+            compare (rank (card "9D")) (rank (card "TH"))  `shouldBe` LT 
+            compare (rank (card "TD")) (rank (card "JH"))  `shouldBe` LT 
+            compare (rank (card "JD")) (rank (card "QH"))  `shouldBe` LT 
+            compare (rank (card "QD")) (rank (card "KH"))  `shouldBe` LT 
+            compare (rank (card "KD")) (rank (card "AH"))  `shouldBe` LT 
 
-rank [r,_] = r
-suit [_,s] = s
-
-compareRanks a b = compare (rankOrder a) (rankOrder b)
+card :: String -> Card
+card [r,s] = (charToRank r, charToSuit s)
     where 
-    rankOrder 'A' = 14
-    rankOrder 'K' = 13
-    rankOrder 'Q' = 12
-    rankOrder 'J' = 11
-    rankOrder 'T' = 10
-    rankOrder  c  = digitToInt c
+    charToRank '2' = Two
+    charToRank '3' = Three 
+    charToRank '4' = Four 
+    charToRank '5' = Five
+    charToRank '6' = Six
+    charToRank '7' = Seven
+    charToRank '8' = Eight
+    charToRank '9' = Nine 
+    charToRank 'T' = Ten
+    charToRank 'J' = Jack
+    charToRank 'Q' = Queen
+    charToRank 'K' = King
+    charToRank 'A' = Ace
+
+    charToSuit 'H' = Hearts
+    charToSuit 'C' = Clubs
+    charToSuit 'D' = Diamonds
+    charToSuit 'S' = Spades 
+
+rank = fst
+suit = snd
+
+compareRanks a b = compare (rank a) (rank b)
         
 

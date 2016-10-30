@@ -91,24 +91,6 @@ Running the test:
     product []     = 1
     product (x:xs) = x * product xs
 
-### Write a function that passes this test:
-
-    import Test.Hspec
-    main = hspec $ do
-        describe "rank" $ do
-            it "should yield the rank of a card" $ do
-                rank "8H"  `shouldBe` '8'
-                rank "AH"  `shouldBe` 'A'
-
-### Write a function that passes this test:
-
-    import Test.Hspec
-    main = hspec $ do
-        describe "suit" $ do
-            it "should yield the suit of a card" $ do
-                suit "8H"  `shouldBe` 'H'
-                suit "AD"  `shouldBe` 'D'
-
 ### Comparing values
 
     compare 42 17 ⏎
@@ -117,33 +99,46 @@ Running the test:
 
     compare "cat" "dog" ⏎
 
-### Write what is required to pass this test
+### Comparing Cards is not Comparing Strings
 
-    describe "compareRanks" $ do
-        it "should compare cards based on rank" $ do
-            compare (rank (card "8D")) (rank (card "6H"))  `shouldBe` GT
-            compare (rank (card "4D")) (rank (card "4H"))  `shouldBe` EQ
-            compare (rank (card "9D")) (rank (card "TH"))  `shouldBe` LT 
-            compare (rank (card "TD")) (rank (card "JH"))  `shouldBe` LT 
-            compare (rank (card "JD")) (rank (card "QH"))  `shouldBe` LT 
-            compare (rank (card "QD")) (rank (card "KH"))  `shouldBe` LT 
-            compare (rank (card "KD")) (rank (card "AH"))  `shouldBe` LT 
+    compare "8D" "9C" -- should be LT and is LT
+    compare "8D" "8C" -- should be EQ but is GT
+    compare "AH  "JC" -- should be GT but is LT
+
+### Comparing Cards
+
+Write a function `card` and a function `rank` such that
+
+compareCards :: String -> String -> Ord
+compareCards s t = compare (rank (card s)) (rank (card t))
+
+    describe "comparing card by rank" $ do
+        it "should follow the rules of poker" $ do
+            compareCards "8D" "6H"  `shouldBe` GT
+            compareCards "4D" "4H"  `shouldBe` EQ
+            compareCards "9D" "TH"  `shouldBe` LT 
+            compareCards "TD" "JH"  `shouldBe` LT 
+            compareCards "JD" "QH"  `shouldBe` LT 
+            compareCards "QD" "KH"  `shouldBe` LT 
+            compareCards "KD" "AH"  `shouldBe` LT 
+
+QQQQ
+then find a suitable type synonym for card and for rank
 
 ## 3. Types == Design Helpers
 ### Types as ways to validate a construct
 
-    type Card = String -- a non scalar type  
-    type Rank = Char   -- a scalar type
+    type Card = String  
+    type Rank = Int   
     type Suit = Char
 
     rank :: Card -> Rank
     suit :: Card -> Suit
 
-    compareRanks -> Rank -> Rank -> Ord
 
 `"#@%"` is a valid `String` value. Is it a valid `Card` value?
 
-What is the result of `compareRanks '$' 'K' ?
+What is the result of `compare (rank (card "#&")) (rank (card "18"))` ?
 
 ### A (slightly) better product type
  

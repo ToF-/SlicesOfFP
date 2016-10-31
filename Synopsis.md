@@ -1,8 +1,29 @@
 # Synopsis
 
-## 1. Program == Function Evaluation
+### 1 The Texas Hold'em Kata
 
-###Evaluating some functions
+Given this input:
+
+    Kc 9s Ks Kd 9d 3c 6d 
+    9c Ah Ks Kd 9d 3c 6d
+    Ac Qc Ks Kd 9d 3c 
+    9h 5s 
+    4d 2d Ks Kd 9d 3c 6d
+    7s Ts Ks Kd 9d
+
+Return this output:
+
+    Kc 9s Ks Kd 9d 3c 6d Full House (winner)
+    9c Ah Ks Kd 9d 3c 6d Two Pair
+    Ac Qc Ks Kd 9d 3c 
+    9h 5s 
+    4d 2d Ks Kd 9d 3c 6d Flush
+    7s Ts Ks Kd 9d
+
+
+### 2 Evaluating some functions
+
+Program == Function Evaluation
     
     sqrt 1764 ⏎
 
@@ -18,7 +39,8 @@
 
     Data.List.insert 42 [1,32,87] ⏎
     
-### A Function Definition
+### 3 A Function Definition
+
 A short program named `WordCount.hs`:
  
     main = interact (\text -> show (length (words text))) 
@@ -28,7 +50,7 @@ Compiling and running the program:
     ghc --make WordCount -o wordcount ⏎
     ./wordcount <WordCount.hs ⏎
 
-### Writing a test
+### 4 Writing a test
 
 A short program named `Specs.hs`:
 
@@ -42,7 +64,7 @@ Running the test:
 
     runhaskell Specs ⏎
 
-### The `$` operator
+### 5 The `$` operator
 
     import Test.Hspec
     main = hspec $
@@ -50,7 +72,7 @@ Running the test:
             it "should pass" $
                 2+2  `shouldBe` 4
 
-### Writing a suite of tests
+### 6 Writing a suite of tests
 
     import Test.Hspec
     main = hspec $ 
@@ -61,7 +83,7 @@ Running the test:
             (it "should not fail" $
                 2*2 `shouldBe` 4)
 
-### Sequencing actions with `do`:
+### 7 Sequencing actions with `do`:
 
     import Test.Hspec
     main = hspec $ do
@@ -71,9 +93,7 @@ Running the test:
             it "should not fail" $do
                 2*2 `shouldBe` 4
 
-## 2. Pattern Matching 
-
-### Expressing distinct cases
+### 8 Expressing distinct cases
 
     response 'Y' = True
     response 'y' = True
@@ -83,7 +103,7 @@ Running the test:
     average []  = 0
     average l   = sum l / length l
 
-### Deconstructing Data
+### 9 Deconstructing Data
 
     isOrdered [a,b]   = a <= b
     isOrdered [a,b,c] = isOrdered [a,b] && isOrdered [b,c]
@@ -91,7 +111,7 @@ Running the test:
     product []     = 1
     product (x:xs) = x * product xs
 
-### Comparing values
+### 10 Comparing values
 
     compare 42 17 ⏎
     compare 17 42 ⏎
@@ -99,106 +119,246 @@ Running the test:
 
     compare "cat" "dog" ⏎
 
-### Comparing Cards is not Comparing Strings
+### 11 Back to Poker Hand
 
-    compare "8D" "9C" -- should be LT and is LT
-    compare "8D" "8C" -- should be EQ but is GT
-    compare "AH  "JC" -- should be GT but is LT
+Comparing Cards is not Comparing Strings
 
-### Comparing Cards
+    compare "8d" "9c" -- should be LT and is LT
+    compare "8d" "8c" -- should be EQ but is GT
+    compare "Ah  "Jc" -- should be GT but is LT
 
-Write a function `card` and a function `rank` such that
+### 12 Comparing Cards by Rank
 
-compareCards :: String -> String -> Ord
-compareCards s t = compare (rank (card s)) (rank (card t))
+Write a function a function `rank` such that
+
 
     describe "comparing card by rank" $ do
         it "should follow the rules of poker" $ do
-            compareCards "8D" "6H"  `shouldBe` GT
-            compareCards "4D" "4H"  `shouldBe` EQ
-            compareCards "9D" "TH"  `shouldBe` LT 
-            compareCards "TD" "JH"  `shouldBe` LT 
-            compareCards "JD" "QH"  `shouldBe` LT 
-            compareCards "QD" "KH"  `shouldBe` LT 
-            compareCards "KD" "AH"  `shouldBe` LT 
+            compare (rank "8d") (rank "6h") `shouldBe` GT
+            compare (rank "4d") (rank "4h") `shouldBe` EQ
+            compare (rank "9d") (rank "Th") `shouldBe` LT 
+            compare (rank "Td") (rank "Jh") `shouldBe` LT 
+            compare (rank "Jd") (rank "Qh") `shouldBe` LT 
+            compare (rank "Qd") (rank "Kh") `shouldBe` LT 
+            compare (rank "Kd") (rank "Ah") `shouldBe` LT 
 
-QQQQ
-then find a suitable type synonym for card and for rank
+### 13 Comparing cards by Suit
 
-## 3. Types == Design Helpers
-### Types as ways to validate a construct
+Write a function a function `suit` such that
 
-    type Card = String  
-    type Rank = Int   
+
+    describe "comparing card by suit" $ do
+        it "should follow the rules of poker" $ do
+            suit "8d" == suit "6d" `shouldBe` True
+            suit "4d" == suit "4h" `shouldBe` False
+            suit "9d" == suit "Tc" `shouldBe` True
+            suit "Td" == suit "Js" `shouldBe` False
+
+### 14 Types as ways to validate a construct
+
+    rank :: String -> Int
+    suit :: String -> Char
+
+`"#@%"` is a valid `String` value. Is it a valid `Card` value?
+
+What is the result of `compare (rank "#&") (rank "18")` ?
+
+comparing cards by rank = extracting and converting the rank part of the card.
+comparing cards by suit = extracting and converting the suit part of the card.
+
+Only when comparing cards you know (maybe) that something was wrong in the given input.
+You can program silly things like `rank "foo"`
+
+### 15 A (slightly) better type
+ 
+    type Card = (Rank, Suit) 
+    type Rank = Int
     type Suit = Char
 
     rank :: Card -> Rank
     suit :: Card -> Suit
 
+    card :: String -> Card
 
-`"#@%"` is a valid `String` value. Is it a valid `Card` value?
+What makes the type `Card = (Rank,Suit)` better than `String`?
 
-What is the result of `compare (rank (card "#&")) (rank (card "18"))` ?
+Once the conversion from String to (Int,Char) is done, the comparing takes care of itself.
 
-### A (slightly) better product type
- 
-    type Card = (Rank, Suit) -- a product type
-    type Rank = Char
-    type Suit = Char
+Bad input is detected at conversion, not comparison.
+You can program silly thinks like `rank "8d" + 4807` or `suit "8d" < suit "8h"
 
-    rank = fst
-    suit = snd
 
-What makes `(Rank,Suit)` better than `String`?
+### 16 Comparing cards by Rank improved
 
-### Write the `card` function
+Write the `card` function so that the test pass
 
-    import Test.Hspec
-    main = hspec $ do
-        describe "rank" $ do
-            it "should yield the rank of a card" $ do
-                rank (card "8H")  `shouldBe` '8'
-                rank (card "AH")  `shouldBe` 'A'
+    describe "comparing card by rank" $ do
+        it "should follow the rules of poker" $ do
+            compare (rank (card "8d")) (rank (card "6h")) `shouldBe` GT
+            compare (rank (card "4d")) (rank (card "4h")) `shouldBe` EQ
+            compare (rank (card "9d")) (rank (card "Th")) `shouldBe` LT 
+            compare (rank (card "Td")) (rank (card "Jh")) `shouldBe` LT 
+            compare (rank (card "Jd")) (rank (card "Qh")) `shouldBe` LT 
+            compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
+            compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
 
-        describe "suit" $ do
-            it "should yield the suit of a card" $ do
-                suit (card "8H")  `shouldBe` 'H'
-                suit (card "AD")  `shouldBe` 'D'
-
-### Types as a way to think about a problem
+### 17 Types as a way to think about a problem
 
     data Suit = Hearts | Clubs | Diamonds | Spades -- an union type
         deriving (Eq, Show)
 
     data Rank = Two | Three | Four | Five | Six | Seven | Eight | Nine 
               | Ten | Jack | Queen | King | Ace
-        deriving (Eq, Ord, Show)
+        deriving (Eq, Ord, Enum, Show)
 
-### New types mean new tests
+    type Card = (Rank, Suit)
+    rank = fst
+    suit = snd
+  
 
-    describe "rank" $ do
-        it "should yield the first half of a card" $ do
-            rank (card "8H")  `shouldBe` Eight
-            rank (card "AH")  `shouldBe` Ace
-    describe "suit" $ do
-        it "should yield the suit of a card" $ do
-            suit (card "8H")  `shouldBe` Hearts
-            suit (card "AD")  `shouldBe` Diamonds
+The type `Card` can have only 52 values.
+Once conversion is done, you can only
+ - compare by rank order
+ - compare on equality by suit
 
-    describe "comparingRank" $ do
-        it "should compare cards based on rank" $ do
-            compare Eight Six `shouldBe` GT
-            compare Ace Ace  `shouldBe` EQ
-            compare Queen King `shouldBe` LT 
+### 18 Passing Functions to Functions
 
-## 4. Functions as Values
-### Passing Functions 
-### Combining Functions
-## 5. List Functions
-### Mapping
-### Folding
-### Sorting
-### Grouping
-## 6. Algebraic Types and Type Classes
-## A data type for Rank
-## A data type for Ranking
+    import Data.Ord
+    :type compare ⏎
+    :type comparing ⏎
+
+    comparing abs (-4) 3
+
+    comparing rank (card "8c") (card "5d") ⏎
+
+the function `rank` is passed to the `comparing` function
+
+### 19 Combining Functions
+
+   :type (.) ⏎
+
+    (length . words) "time flies like an arrow" ⏎
+
+    comparing (rank . card) "8c" "5d" ⏎
+
+
+### 20 List functions: reverse
+
+    reverse "Hello World" ⏎
+
+### 21 Mapping
+
+    :type map ⏎
+    map negate [-34,42,17] ⏎
+
+    map sqrt [1,2,3,4,5] ⏎
+
+### 22 Collecting Cards
+
+Write the function `cards` such that
+
+    describe "cards" $ do
+        it "should collect cards from a string" $ do
+            cards "8d Ah Qc"  `shouldBe` [(Eight,Diamonds),(Ace,Hearts),(Queen,Clubs)]
+
+### 23 Sorting
+
+    sort [42,3,17,1,22,4,38] ⏎
+
+    sortBy compare "HELLO" ⏎
+
+    sortBy (comparing length) (words "time flies like an arrow") ⏎
+
+
+### 24 Ranks of a hand
+
+Write the function `ranks` such that
+
+    describe "ranks" $ do
+        it "should obtain ranks from a list of cards sorted in rank order" $ do
+            ranks (cards "8d Ah Qc")  `shouldBe` [Eight,Queen,Ace]
+
+### 25 Grouping
+
+    group "HELLO" ⏎
+    
+    (group . sort) "Cats and Dogs"
+
+### 26 Groups of Cards
+
+Write the function `groups` such that
+
+    describe "groups" $ do
+        it "should obtain groups of ranks from a list of cards, sorted by descending length of group then rank" $ do
+            groups (cards "8d Ah Qc 8h 8s")  `shouldBe` [[EIght,Eight,Eight],[Ace],[Queen]]
+            groups (cards "8d Ah Qc 8h As")  `shouldBe` [[Ace,Ace][EIght,Eight],[Queen]]
+
+## 27 Categorizing groups of Cards
+
+A data type for Category
+
+    data Category = HighCard | OnePair | TwoPairs | ThreeOfAKind | Straight | Flush
+                  | FullHouse | FourOfAKind | StraightFlush | RoyalFlush
+        deriving (Eq,Ord,Show)
+
+Write the function `category :: [[Rank]] -> Category` such that
+
+    describe "category" $ do
+        it "should determine the category of a hand" $ do
+            let hs = ["4s 5d Kc Tc 3d"
+                     ,"4s Kd Kc Tc 3d"
+                     ,"4s Kd Kc Tc Td"
+                     ,"Ts Kd Kc Tc Td"
+                     ,"Ts Kd Kc Kc 8d"
+                     ,"Ts Kd Kc Kc Kd"]
+            map (category.groups.cards) hs ==  
+                    [HighCard ,OnePair ,TwoPairs
+                    ,FullHouse ,ThreeOfAKind ,FourOfAKind]
+
+### 28 Special categories
+
+A Straight is like a HighCard except that ranks are forming a sequence, e.g. Th 9d 8c 7s 6s
+
+A Flush is like a HighCard except that all the cards have the same suit, e.g. Kh Jh 9h 7h 6h
+
+A Straight Flush is combines the characteristics of a Straight and a Flush, e.g Th 9h 8h 7h 6h 
+
+A Royal Flush is a Straight Flush starting with an Ace e.g. Ah Kh Qh Jh Th
+
+### 29 Guards
+
+Pattern matching can be subjected to conditions, called guards
+
+    power n m | m >= 0    = product (replicate m n)
+              | otherwise = error "negative exponent"   
+
+    sign n | n < 0 = -1
+           | n > 0 =  1
+           | _     =  0
+
+### 30 Detecting a Flush
+
+Write the function `flush` such that
+
+    describe "flush" $ do
+        it "should detect when all cards in a hand have the same suit" $ do
+            flush (cards "8d Ah 4d 3d Ad") `shouldBe` False
+            flush (cards "8h Ah 4h 3h Kh") `shouldBe` True
+
+### 31 Enum typeclass
+
+    fromEnum False ⏎
+    fromEnum True ⏎
+
+    fromEnum Ace ⏎
+
+### 32 Detecting a Straight
+
+Given a list of 5 distinct groups of 1 rank each, 
+And   the first rank value = the last rank value + 4
+Then  the category is Straight
+
+    isStraight [[a],_,_,_,[b]] = fromEnum a == 4 + fromEnum b 
+    isStraight _               = False 
+
+

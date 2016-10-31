@@ -8,29 +8,24 @@ data Rank = Two | Three | Four | Five | Six | Seven | Eight | Nine
           | Ten | Jack | Queen | King | Ace
     deriving (Eq, Ord, Show)
 
-type Card = (Rank,Suit)
 
 main = hspec $ do
-    describe "rank" $ do
-        it "should yield the first half of a card" $ do
-            rank (card "8H")  `shouldBe` Eight
-            rank (card "AH")  `shouldBe` Ace
-    describe "suit" $ do
-        it "should yield the suit of a card" $ do
-            suit (card "8H")  `shouldBe` Hearts
-            suit (card "AD")  `shouldBe` Diamonds
+    describe "comparing card by rank" $ do
+        it "should follow the rules of poker" $ do
+            compare (rank "8d") (rank "6h") `shouldBe` GT
+            compare (rank "4d") (rank "4h") `shouldBe` EQ
+            compare (rank "9d") (rank "Th") `shouldBe` LT 
+            compare (rank "Td") (rank "Jh") `shouldBe` LT 
+            compare (rank "Jd") (rank "Qh") `shouldBe` LT 
+            compare (rank "Qd") (rank "Kh") `shouldBe` LT 
+            compare (rank "Kd") (rank "Ah") `shouldBe` LT 
 
-    describe "compareRanks" $ do
-        it "should compare cards based on rank" $ do
-            compare (rank (card "8D")) (rank (card "6H"))  `shouldBe` GT
-            compare (rank (card "4D")) (rank (card "4H"))  `shouldBe` EQ
-            compare (rank (card "9D")) (rank (card "TH"))  `shouldBe` LT 
-            compare (rank (card "TD")) (rank (card "JH"))  `shouldBe` LT 
-            compare (rank (card "JD")) (rank (card "QH"))  `shouldBe` LT 
-            compare (rank (card "QD")) (rank (card "KH"))  `shouldBe` LT 
-            compare (rank (card "KD")) (rank (card "AH"))  `shouldBe` LT 
-
-card :: String -> Card
+    describe "comparing card by suit" $ do
+        it "should follow the rules of poker" $ do
+            suit "8d" == suit "6d" `shouldBe` True
+            suit "4d" == suit "4h" `shouldBe` False
+            suit "9d" == suit "Tc" `shouldBe` True
+            suit "Td" == suit "Js" `shouldBe` False
 card [r,s] = (charToRank r, charToSuit s)
     where 
     charToRank '2' = Two
@@ -52,9 +47,8 @@ card [r,s] = (charToRank r, charToSuit s)
     charToSuit 'D' = Diamonds
     charToSuit 'S' = Spades 
 
-rank = fst
-suit = snd
+rank = head
+suit = head . tail
 
-compareRanks a b = compare (rank a) (rank b)
         
 

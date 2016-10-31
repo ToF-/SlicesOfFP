@@ -361,4 +361,37 @@ Then  the category is Straight
     isStraight [[a],_,_,_,[b]] = fromEnum a == 4 + fromEnum b 
     isStraight _               = False 
 
+### 33 Determining a Ranking
 
+Comparing two hands ranking involves comparing their category, and if their categories are equal, comparing the ranks 
+
+    type Ranking = (Category, [Ranks])
+
+    ranking :: [Cards] -> Ranking
+
+Using the `groups`, `reverse`, `sort`, `ranks`, `isStraight`, `isFlush` functions, write the function `ranking` 
+
+
+        it "should correctly order a list by ranking" $ do
+            let s = ["7s 5c 4d 3d 2c" -- lowest High Card
+                    ,"As Kc Qd Jd 9c" -- highest High Card
+                    ,"2h 2d 5c 4c 3c" -- lowest Pair
+                    ,"Ah Ad Kc Qc Jc" -- highest Pair
+                    ,"2c 2s 3s 3c 4h" -- lowest Two Pairs
+                    ,"Ac As Ks Kc Jh" -- highest Two Pairs
+                    ,"2h 2d 2c 4c 3c" -- lowest Three Of A Kind
+                    ,"Ah Ad Ac Qc Jc" -- highest Three Of A Kind
+                    ,"5h 4s 3d 2c Ah" -- lowest Straight
+                    ,"Ah Ks Qd Jc Th" -- highest Straight
+                    ,"7c 5c 4c 3c 2c" -- lowest Flush
+                    ,"Ac Kc Qc Jc 9c" -- highest Flush
+                    ,"2h 2d 2c 3h 3c" -- lowest Full House
+                    ,"Ah Ad Ac Kh Kc" -- highest Full House
+                    ,"2c 2s 2h 2d 3c" -- lowest Four Of A Kind
+                    ,"Ac As Ah Ad Jc" -- highest Four Of A Kind
+                    ,"5c 4c 3c 2c Ac" -- lowest Straight Flush
+                    ,"Ah Kh Qh Jh Th"] -- Royal Flush
+                isStrictlyOrdered [_] = True
+                isStrictlyOrdered (x:y:xs) = x < y && isStrictlyOrdered (y:xs) 
+                r = map (ranking.cards) s
+            isStrictlyOrdered r `shouldBe` True

@@ -11,7 +11,9 @@ Given this input:
     4d 2d Ks Kd 9d 3c 6d
     7s Ts Ks Kd 9d
 
-Return this output:
+When I run the program
+
+Then the output is
 
     Kc 9s Ks Kd 9d 3c 6d Full House (winner)
     9c Ah Ks Kd 9d 3c 6d Two Pair

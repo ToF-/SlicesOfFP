@@ -150,4 +150,38 @@ Two examples:
             compare "cat" "dog" `shouldBe` LT
 
 
+----
+
+
+### Comparing Poker Cards
+
+    describe "using Strings as Cards" $ do
+        it "cannot give satisfactory comparisons" $ do
+            compare "8d" "9c"  `shouldBe` LT
+            compare "8d" "8c"  `shouldBe` EQ
+            compare "Ah" "Jc"  `shouldBe` GT
+
+
+----
+
+
+### How to compare cards by rank ?
+
+
+    describe "comparing card by rank" $ do
+        it "should follow the rules of poker" $ do
+            compare (rank "8d") (rank "6h") `shouldBe` GT
+            compare (rank "4d") (rank "4h") `shouldBe` EQ
+            compare (rank "9d") (rank "Th") `shouldBe` LT 
+            compare (rank "Td") (rank "Jh") `shouldBe` LT 
+            compare (rank "Jd") (rank "Qh") `shouldBe` LT 
+            compare (rank "Qd") (rank "Kh") `shouldBe` LT 
+            compare (rank "Kd") (rank "Ah") `shouldBe` LT 
+
+Hint:
+
+    rank ['A',_] = 14
+    rank ['K',_] = 13
+    . . .
+
 

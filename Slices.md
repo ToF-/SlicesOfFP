@@ -5,11 +5,9 @@ Christophe Thibaut
 
 
 ----
-
-
 ### The Texas Hold'em Kata
 
-Given this input:
+Given this file `input.txt` :
 
     Kc 9s Ks Kd 9d 3c 6d 
     9c Ah Ks Kd 9d 3c 6d
@@ -18,7 +16,8 @@ Given this input:
     4d 2d Ks Kd 9d 3c 6d
     7s Ts Ks Kd 9d
 
-When I run the program
+
+When `runhaskell PokerHands.hs <input.txt`
 
 Then the output is
 
@@ -29,13 +28,29 @@ Then the output is
     4d 2d Ks Kd 9d 3c 6d Flush
     7s Ts Ks Kd 9d
 
+----
+### The Texas Hold'em Kata
+
+in the line: `  8s 9d Th Js Qd Kc Ah  ` 
+
+`T`,`J`,`Q`,`K`,`A` stand for *Ten*, *Jack*, *Queen*, *King*, *Ace*
+
+`h`,`s`,`d`,`c` stand for *Hearts*, *Spades*, *Diamonds*, *Clubs*
+
+Five little problems:
+
+1. Interpret Strings in terms of Cards
+2. Compare Cards (by Rank or by Suit)
+3. Find the Category of a Hand (Hand = group of 5 Cards)
+4. Find the best Hand in a group of 7 Cards
+5. Find the best player in a game
 
 ----
-
-
 ### Program = Function Evaluation
 
-Lauch *ghci* and try some functions
+
+Lauch *ghci* and try some functions:
+
 
     sqrt 1764 ⏎
 
@@ -51,15 +66,13 @@ Lauch *ghci* and try some functions
 
     Data.List.insert 42 [1,32,87] ⏎
 
-
 ----
-
-
 ### Writing a test
 
 A short program named *Specs.hs*:
 
     import Test.Hspec
+
     main = hspec 
         (describe "a test" 
             (it "should pass" 
@@ -71,11 +84,10 @@ Running the test:
 
 
 ----
-
-
 ### Sequencing actions with *do*:
 
     import Test.Hspec
+
     main = hspec $ do
         describe "a suite" $ do
             it "should pass" $ do
@@ -84,13 +96,12 @@ Running the test:
                 2*2 `shouldBe` 4
 
 ----
-
-
 ### Let's write some functions
 
 Write a function *response* that passes this test:
 
     import Test.Hspec
+
     main = hspec $ do
         describe "response" $ do
             it "should be a yes or a no" $ do
@@ -100,9 +111,9 @@ Write a function *response* that passes this test:
                 response 'y' `shouldBe` True
 
 ----
+### Pattern Matching
 
-
-### Pattern Matching: Expressing distinct cases 
+Patterns allow for expressing distinct cases 
 
 
     response 'Y' = True
@@ -111,8 +122,9 @@ Write a function *response* that passes this test:
     response 'n' = False
 
 ----
+### Lists
 
-### Lists: a way to collect values of the same type
+List are a way to collect values of the same type
 
 Ghci:
 
@@ -130,8 +142,6 @@ Ghci:
 
 
 ----
-
-
 #### Let's write some functions
 
 Write a function *average* that passes this test:
@@ -142,19 +152,16 @@ Write a function *average* that passes this test:
                 average [2, 4, 12] `shouldBe` 6.0
 
 ----
-
-
-### Pattern Matching: Expressing distinct cases 
+### Pattern Matching
 
 
     average [ ]  = 0.0
     average xs   = sum xs / length xs
 
-
 ----
+### Pattern Matching
 
-
-### Pattern Matching: Deconstructing Data 
+Patterns allow for deconstructing Data 
 
 Two examples:
 
@@ -164,12 +171,10 @@ Two examples:
     product []     = 1
     product (x:xs) = x * product xs
 
-
 ----
-
-
 ### Comparing values
 
+Some useful checks about `compare`
 
     describe "compare" $ do
         it "should compare values of any type of class Ord" $ do
@@ -179,11 +184,10 @@ Two examples:
 
             compare "cat" "dog" `shouldBe` LT
 
-
 ----
+### Strings are not Cards!
 
-
-### Comparing Cards can't work with Strings
+There's no way that this test can pass:
 
     describe "using Strings as Cards" $ do
         it "cannot give satisfactory comparisons" $ do
@@ -191,10 +195,9 @@ Two examples:
             compare "8d" "8c"  `shouldBe` EQ
             compare "Ah" "Jc"  `shouldBe` GT
 
+unless we rewrite `compare`
 
 ----
-
-
 ### How to compare cards by rank ?
 
 Write a function `rank` that passes this test:
@@ -216,10 +219,7 @@ Hint:
     rank ['K',_] = 13
     . . .
 
-
 ----
-
-
 ### How to compare cards by suit
 
 Write a function `suit` that passes this test
@@ -231,10 +231,7 @@ Write a function `suit` that passes this test
             suit "9d" == suit "Tc" `shouldBe` True
             suit "Td" == suit "Js" `shouldBe` False
 
-
 ----
-
-
 ### Types are a way to validate my constructs
 
 We have types:
@@ -251,8 +248,6 @@ But:
 - only when comparing fails we know we had incorrect data
 
 ----
-
-
 ### Tuples: a way to gather values of different types
 
 Ghci:
@@ -265,10 +260,7 @@ Ghci:
 
 	snd ('A', True)  ⏎
 
-
 ----
-
-
 ### Types are a way to think about the problem
  
 A (slighty) better design, with a new function: `Card`
@@ -288,10 +280,7 @@ Better because:
 - bad input is detected at conversion, not in comparisons
 - but: you can still do silly things like ` rank (4807,'@') `
 
-
 ----
-
-
 ### Comparing cards by Rank improved
 
 Write the `card` function so that the test pass
@@ -306,10 +295,7 @@ Write the `card` function so that the test pass
             compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
             compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
 
-
 ----
-
-
 ### Types as a way to think about a problem
 
     data Suit = Hearts | Clubs | Diamonds | Spades -- an union type
@@ -330,9 +316,7 @@ Write the `card` function so that the test pass
 	- compare by rank order (no illegal rank allowed)
 	- compare on equality by suit (no illegal suit allowed)
 
-
 ----
-
 # Checkpoint #1 
 
 We have the proper types to describe our values
@@ -341,10 +325,7 @@ We have our main feature: comparing cards
 
 #Well Done!!
 
-
 ----
-
-
 ### Passing Functions to Functions
 
     import Data.Ord ⏎
@@ -361,10 +342,7 @@ We have our main feature: comparing cards
 
 the function `rank` is passed to the `comparing` function
 
-
 ----
-
-
 ### Combining Functions
 
     :type (.) ⏎
@@ -375,9 +353,7 @@ the function `rank` is passed to the `comparing` function
 
 `(f . g) x == f (g x)` 
 
-
 ----
-
 ### Combining Functions
 
 Refactor the test using `comparing` and the `. ` operator
@@ -392,10 +368,7 @@ Refactor the test using `comparing` and the `. ` operator
             compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
             compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
 
-
 ----
-
-
 ### Mapping a function to a list of values
 
     :type map ⏎
@@ -403,10 +376,7 @@ Refactor the test using `comparing` and the `. ` operator
 
     map sqrt [1,2,3,4,5] ⏎
 
-
 ----
-
-
 ### Collecting Cards
 
 Write the function `cards` such that
@@ -416,10 +386,7 @@ Write the function `cards` such that
             cards "8d Ah Qc"  `shouldBe`
                  [(Eight,Diamonds),(Ace,Hearts),(Queen,Clubs)]
 
-
 ----
-
-
 ### Sorting
 
     sort [42,3,17,1,22,4,38] ⏎
@@ -430,8 +397,6 @@ Write the function `cards` such that
 
 
 ----
-
-
 ### Ranks of a hand
 
 Write the function `ranks` such that
@@ -440,5 +405,130 @@ Write the function `ranks` such that
         it "should give the sorted ranks of a hand" $ do
             ranks (cards "8d Ah Qc")  `shouldBe` [Eight,Queen,Ace]
 
+----
+### Grouping
 
+    group "HELLO" ⏎
+    
+    (group . sort) "Cats and Dogs"
+
+----
+### Groups of Cards
+
+Write the function `groups` such that
+
+    describe "groups" $ do
+        it "should obtain groups of ranks from a list of cards, sorted by descending length of group then rank" $ do
+            groups (cards "8d Ah Qc 8h 8s")  `shouldBe` [[EIght,Eight,Eight],[Ace],[Queen]]
+            groups (cards "8d Ah Qc 8h As")  `shouldBe` [[Ace,Ace][EIght,Eight],[Queen]]
+
+----
+### Categorizing groups of Cards
+
+A data type for Category
+
+    data Category = HighCard | OnePair | TwoPairs | ThreeOfAKind | Straight | Flush
+                  | FullHouse | FourOfAKind | StraightFlush | RoyalFlush
+        deriving (Eq,Ord,Show)
+
+Write the function `category :: [[Rank]] -> Category` such that
+
+    describe "category" $ do
+        it "should determine the category of a hand" $ do
+            let hs = ["4s 5d Kc Tc 3d"
+                     ,"4s Kd Kc Tc 3d"
+                     ,"4s Kd Kc Tc Td"
+                     ,"Ts Kd Kc Tc Td"
+                     ,"Ts Kd Kc Kc 8d"
+                     ,"Ts Kd Kc Kc Kd"]
+            map (category.groups.cards) hs ==  
+                    [HighCard ,OnePair ,TwoPairs
+                    ,FullHouse ,ThreeOfAKind ,FourOfAKind]
+
+----
+### Special categories
+
+A Straight is like a HighCard except that ranks are forming a sequence, e.g. Th 9d 8c 7s 6s
+
+A Flush is like a HighCard except that all the cards have the same suit, e.g. Kh Jh 9h 7h 6h
+
+A Straight Flush is combines the characteristics of a Straight and a Flush, e.g Th 9h 8h 7h 6h 
+
+A Royal Flush is a Straight Flush starting with an Ace e.g. Ah Kh Qh Jh Th
+
+----
+### Guards
+
+Pattern matching can be subjected to conditions, called guards
+
+    power n m | m >= 0    = product (replicate m n)
+              | otherwise = error "negative exponent"   
+
+    sign n | n < 0 = -1
+           | n > 0 =  1
+           | _     =  0
+
+----
+### Detecting a Flush
+
+Write the function `flush` such that
+
+    describe "flush" $ do
+        it "should detect when all cards in a hand have the same suit" $ do
+            flush (cards "8d Ah 4d 3d Ad") `shouldBe` False
+            flush (cards "8h Ah 4h 3h Kh") `shouldBe` True
+
+----
+### Enum typeclass
+
+    fromEnum False ⏎
+    fromEnum True ⏎
+
+    fromEnum Ace ⏎
+
+----
+### Detecting a Straight
+
+Given a list of 5 distinct groups of 1 rank each, 
+And   the first rank value = the last rank value + 4
+Then  the category is Straight
+
+    isStraight [[a],_,_,_,[b]] = fromEnum a == 4 + fromEnum b 
+    isStraight _               = False 
+
+----
+### Determining a Ranking
+
+Comparing two hands ranking involves comparing their category, and if their categories are equal, comparing the ranks 
+
+    type Ranking = (Category, [Ranks])
+
+    ranking :: [Cards] -> Ranking
+
+Using the `groups`, `reverse`, `sort`, `ranks`, `isStraight`, `isFlush` functions, write the function `ranking` 
+
+
+        it "should correctly order a list by ranking" $ do
+            let s = ["7s 5c 4d 3d 2c" -- lowest High Card
+                    ,"As Kc Qd Jd 9c" -- highest High Card
+                    ,"2h 2d 5c 4c 3c" -- lowest Pair
+                    ,"Ah Ad Kc Qc Jc" -- highest Pair
+                    ,"2c 2s 3s 3c 4h" -- lowest Two Pairs
+                    ,"Ac As Ks Kc Jh" -- highest Two Pairs
+                    ,"2h 2d 2c 4c 3c" -- lowest Three Of A Kind
+                    ,"Ah Ad Ac Qc Jc" -- highest Three Of A Kind
+                    ,"5h 4s 3d 2c Ah" -- lowest Straight
+                    ,"Ah Ks Qd Jc Th" -- highest Straight
+                    ,"7c 5c 4c 3c 2c" -- lowest Flush
+                    ,"Ac Kc Qc Jc 9c" -- highest Flush
+                    ,"2h 2d 2c 3h 3c" -- lowest Full House
+                    ,"Ah Ad Ac Kh Kc" -- highest Full House
+                    ,"2c 2s 2h 2d 3c" -- lowest Four Of A Kind
+                    ,"Ac As Ah Ad Jc" -- highest Four Of A Kind
+                    ,"5c 4c 3c 2c Ac" -- lowest Straight Flush
+                    ,"Ah Kh Qh Jh Th"] -- Royal Flush
+                isStrictlyOrdered [_] = True
+                isStrictlyOrdered (x:y:xs) = x < y && isStrictlyOrdered (y:xs) 
+                r = map (ranking.cards) s
+            isStrictlyOrdered r `shouldBe` True
 

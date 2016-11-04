@@ -1,4 +1,4 @@
-# Synopsis
+Synopsis
 
 ### 1 The Texas Hold'em Kata
 

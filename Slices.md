@@ -429,3 +429,16 @@ Write the function `cards` such that
     sortBy (comparing length) (words "time flies like an arrow") ⏎
 
 
+----
+
+
+### Ranks of a hand
+
+Write the function `ranks` such that
+
+    describe "ranks" $ do
+        it "should give the sorted ranks of a hand" $ do
+            ranks (cards "8d Ah Qc")  `shouldBe` [Eight,Queen,Ace]
+
+
+

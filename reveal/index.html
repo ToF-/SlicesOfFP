@@ -91,6 +91,8 @@ Lauch *ghci* and try some functions:
 
     subtract 2 44 ⏎
 
+     2 `subtract` 44 ⏎
+
     subtract 1 (subtract 1 44) ⏎
 
     6 * (3 + 4) ⏎
@@ -197,8 +199,6 @@ using Pattern Matching to denote cases:
 
 also allows for deconstructing data 
 
-two examples:
-
     isOrdered [a,b]   = a <= b
     isOrdered [a,b,c] = isOrdered [a,b] && isOrdered [b,c]
 
@@ -215,7 +215,6 @@ Some useful checks about `compare`
             compare 42 17       `shouldBe` GT
             compare 'A' 'B'     `shouldBe` LT
             compare 11.3 11.3   `shouldBe` EQ
-
             compare "cat" "dog" `shouldBe` LT
 
 ----
@@ -225,7 +224,7 @@ There's no way that this test can pass:
 
     describe "using Strings as Cards" $ do
         it "cannot give satisfactory comparisons" $ do
-            compare "8d" "9c"  `shouldBe` LT
+            compare "Td" "Jc"  `shouldBe` LT
             compare "8d" "8c"  `shouldBe` EQ
             compare "Ah" "Jc"  `shouldBe` GT
 
@@ -266,23 +265,26 @@ Write a function `suit` that passes this test
             suit "Td" == suit "Js" `shouldBe` False
 
 ----
-### Types are a way to validate my constructs
+### Types = a way to check the meaning of programs
 
 We have types:
 
     rank :: String -> Int
     suit :: String -> Char
 
+`rank False ` or ` rank 3.1415 ` are not legal
+
 But:
 
-- every String value is not a valid Card value
-- ` rank False ` or ` rank 3.1415 ` are not legal
-- but ` rank "Foo" ` is still legal
+- ` rank "Foo" ` is still legal
 - `compare (rank "#&") (rank "18")` == ... ?
+- every *String* value is not a valid *Card* value
 - only when comparing fails we know we had incorrect data
 
 ----
-### Tuples: a way to gather values of different types
+### Tuples
+
+A way to gather values of different types
 
 Ghci:
 
@@ -290,14 +292,18 @@ Ghci:
 
 	:type ('A',True) ⏎
 
+    :type fst ⏎
+
+    :type snd ⏎
+
 	fst ('A', True) ⏎
 
 	snd ('A', True)  ⏎
 
 ----
-### Types are a way to think about the problem
+### Types = a way to think about the problem
  
-A (slighty) better design, with a new function: `Card`
+Let's define types synonyms:
 
     type Card = (Rank, Suit) 
     type Rank = Int
@@ -306,18 +312,18 @@ A (slighty) better design, with a new function: `Card`
     rank :: Card -> Rank
     suit :: Card -> Suit
 
+And a new function from `String` to `Card`:
+
     card :: String -> Card
 
-Better because:
-
-- once conversion is done, the comparing takes care of itself
-- bad input is detected at conversion, not in comparisons
-- but: you can still do silly things like ` rank (4807,'@') `
-
 ----
-### Comparing cards by Rank improved
+### Comparing cards, improved
 
-Write the `card` function so that the test pass
+Write the function:
+
+    card :: String -> Card
+
+so that the test pass
 
     describe "comparing card by rank" $ do
         it "should follow the rules of poker" $ do
@@ -330,19 +336,73 @@ Write the `card` function so that the test pass
             compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
 
 ----
-### Types as a way to think about a problem
+### Comparing cards, improved
 
-    data Suit = Hearts | Clubs | Diamonds | Spades -- an union type
+    card :: String -> Card
+    rank :: Card -> Rank
+    suit :: Card -> Suit
+
+Better because:
+
+- once conversion is done, the comparing takes care of itself
+- bad input is detected at conversion, not in comparisons
+
+But:
+
+- you can still do silly things like ` rank (4807,'@') `
+
+----
+### Types = a way to think about a problem
+
+Let's create new types:
+
+    data Suit = Hearts | Clubs | Diamonds | Spades
         deriving (Eq, Show)
 
-    data Rank = Two | Three | Four | Five | Six | Seven | Eight | Nine 
-              | Ten | Jack | Queen | King | Ace
+    data Rank = Two | Three | Four | Five | Six | Seven | Eight 
+              | Nine | Ten | Jack | Queen | King | Ace
         deriving (Eq, Ord, Enum, Show)
 
     type Card = (Rank, Suit)
-    rank = fst
-    suit = snd
-  
+
+Rewrite the `card` function so that the tests still pass
+
+Hint:
+
+    card [r,s] = (charToRank c, charToSuit s)
+
+    charToRank 'A' = Ace
+    ...
+ 
+----
+### Type Class = a way to define type conformity
+
+Saying that
+
+    data Rank = Two | Three | Four | Five | Six | Seven | Eight 
+              | Nine | Ten | Jack | Queen | King | Ace
+        deriving (Eq, Ord, Enum, Show)
+
+means that values of type `Rank`
+
+- can be compared with `==` and `/=` 
+- can be compared with `compare`, `<`, `<=` ...
+- can be converted to and fron Int with `fromEnum` and `toEnum`
+- can be converted to String with `show`
+
+----
+### Type Class = a way to define type conformity
+
+Ghci:
+
+    :load PokerHand.hs ⏎
+
+    Two < Three ⏎
+    Ace > King ⏎
+    show "Queen" ⏎
+    card "8d" ⏎
+
+Better design:
 
 - the type `Card` can have only 52 values.
 - once conversion is done, you can only
@@ -355,12 +415,14 @@ Write the `card` function so that the test pass
 
 We have the proper types to describe our values
 
-We have our main feature: comparing cards
+We have our first feature: comparing cards
 
 #Well Done!!
 
 ----
 ### Passing Functions to Functions
+
+Ghci:
 
     import Data.Ord ⏎
 
@@ -378,6 +440,8 @@ the function `rank` is passed to the `comparing` function
 
 ----
 ### Combining Functions
+
+Ghci:
 
     :type (.) ⏎
 
@@ -404,6 +468,8 @@ Refactor the test using `comparing` and the `. ` operator
 
 ----
 ### Mapping a function to a list of values
+
+Ghci:
 
     :type map ⏎
     map negate [-34,42,17] ⏎
@@ -452,43 +518,66 @@ Write the function `ranks` such that
 Write the function `groups` such that
 
     describe "groups" $ do
-        it "should obtain groups of ranks from a list of cards, sorted by descending length of group then rank" $ do
-            groups (cards "8d Ah Qc 8h 8s")  `shouldBe` [[EIght,Eight,Eight],[Ace],[Queen]]
-            groups (cards "8d Ah Qc 8h As")  `shouldBe` [[Ace,Ace][EIght,Eight],[Queen]]
+        it "should group and sort the ranks of a hand" $ do
+            groups (cards "8d Ah Qc 8h 8s")  `shouldBe`
+                 [[EIght,Eight,Eight],[Ace],[Queen]]
+
+            groups (cards "8d Ah Qc 8h As")  `shouldBe`
+                 [[Ace,Ace][EIght,Eight],[Queen]]
+
+Hint: use
+- `sort`
+- `sortBy`
+- `comparing`
+- `group`
+- `reverse`
 
 ----
 ### Categorizing groups of Cards
 
 A data type for Category
 
-    data Category = HighCard | OnePair | TwoPairs | ThreeOfAKind | Straight | Flush
-                  | FullHouse | FourOfAKind | StraightFlush | RoyalFlush
+    data Category = HighCard | OnePair | TwoPairs | ThreeOfAKind 
+                  | Straight | Flush | FullHouse | FourOfAKind 
+                  | StraightFlush | RoyalFlush
         deriving (Eq,Ord,Show)
 
-Write the function `category :: [[Rank]] -> Category` such that
+----
+### Categorizing groups of Cards
+
+Write the function
+
+ `category :: [[Rank]] -> Category`
 
     describe "category" $ do
         it "should determine the category of a hand" $ do
             let hs = ["4s 5d Kc Tc 3d"
                      ,"4s Kd Kc Tc 3d"
                      ,"4s Kd Kc Tc Td"
-                     ,"Ts Kd Kc Tc Td"
                      ,"Ts Kd Kc Kc 8d"
+                     ,"Ts Kd Kc Tc Td"
                      ,"Ts Kd Kc Kc Kd"]
             map (category.groups.cards) hs ==  
-                    [HighCard ,OnePair ,TwoPairs
-                    ,FullHouse ,ThreeOfAKind ,FourOfAKind]
+                    [HighCard, OnePair, TwoPairs
+                    ,ThreeOfAKind, FullHouse, FourOfAKind]
+
+Hint:
+
+    category [_,_,_,_,_]   = HighCard
+    category [[_,_],_,_,_] = OnePair
+    ...
 
 ----
 ### Special categories
 
-A Straight is like a HighCard except that ranks are forming a sequence, e.g. Th 9d 8c 7s 6s
-
-A Flush is like a HighCard except that all the cards have the same suit, e.g. Kh Jh 9h 7h 6h
-
-A Straight Flush is combines the characteristics of a Straight and a Flush, e.g Th 9h 8h 7h 6h 
-
-A Royal Flush is a Straight Flush starting with an Ace e.g. Ah Kh Qh Jh Th
+- A *Straight* is like a *HighCard* with ranks forming a sequence
+    - e.g. Th 9d 8c 7s 6s
+- A *Flush* is like a *HighCard* with all cards of same suit
+    - e.g. Kh Jh 9h 7h 6h
+- A *Straight Flush* is a *Straight* and a *Flush*
+    - e.g Th 9h 8h 7h 6h 
+- A *Royal Flush* is a *Straight Flush* starting with an Ace
+    - e.g. Ah Kh Qh Jh Th
 
 ----
 ### Guards
@@ -505,27 +594,39 @@ Pattern matching can be subjected to conditions, called guards
 ----
 ### Detecting a Flush
 
-Write the function `flush` such that
+Write the function `flush`:
 
     describe "flush" $ do
-        it "should detect when all cards in a hand have the same suit" $ do
+        it "should detect when all cards have the same suit" $ do
             flush (cards "8d Ah 4d 3d Ad") `shouldBe` False
             flush (cards "8h Ah 4h 3h Kh") `shouldBe` True
 
+Hint: use
+- `group`
+- `lenght`
+- pattern matching with guards
+
 ----
-### Enum typeclass
+### The Enum Type Class
+
+Ghci:
 
     fromEnum False ⏎
     fromEnum True ⏎
 
+    :load PokerHand.hs ⏎
+
     fromEnum Ace ⏎
+    fromEnum King ⏎
 
 ----
 ### Detecting a Straight
 
-Given a list of 5 distinct groups of 1 rank each, 
-And   the first rank value = the last rank value + 4
-Then  the category is Straight
+Method:
+- Given a list of 5 distinct groups of 1 rank each, 
+- And   the first rank value = the last rank value + 4
+- Then  the category is Straight
+
 
     isStraight [[a],_,_,_,[b]] = fromEnum a == 4 + fromEnum b 
     isStraight _               = False 
@@ -533,38 +634,33 @@ Then  the category is Straight
 ----
 ### Determining a Ranking
 
+If two hands have the same category, the winner is the hand with the highest rank in the category.
+
+If two hands have the same category and rank, the winner is the hand with the highest remaining cards. 
+
 Comparing two hands ranking involves comparing their category, and if their categories are equal, comparing the ranks 
 
     type Ranking = (Category, [Ranks])
 
     ranking :: [Cards] -> Ranking
 
-Using the `groups`, `reverse`, `sort`, `ranks`, `isStraight`, `isFlush` functions, write the function `ranking` 
-
+----
+### Determining a Ranking
 
         it "should correctly order a list by ranking" $ do
-            let s = ["7s 5c 4d 3d 2c" -- lowest High Card
-                    ,"As Kc Qd Jd 9c" -- highest High Card
-                    ,"2h 2d 5c 4c 3c" -- lowest Pair
-                    ,"Ah Ad Kc Qc Jc" -- highest Pair
-                    ,"2c 2s 3s 3c 4h" -- lowest Two Pairs
-                    ,"Ac As Ks Kc Jh" -- highest Two Pairs
-                    ,"2h 2d 2c 4c 3c" -- lowest Three Of A Kind
-                    ,"Ah Ad Ac Qc Jc" -- highest Three Of A Kind
-                    ,"5h 4s 3d 2c Ah" -- lowest Straight
-                    ,"Ah Ks Qd Jc Th" -- highest Straight
-                    ,"7c 5c 4c 3c 2c" -- lowest Flush
-                    ,"Ac Kc Qc Jc 9c" -- highest Flush
-                    ,"2h 2d 2c 3h 3c" -- lowest Full House
-                    ,"Ah Ad Ac Kh Kc" -- highest Full House
-                    ,"2c 2s 2h 2d 3c" -- lowest Four Of A Kind
-                    ,"Ac As Ah Ad Jc" -- highest Four Of A Kind
-                    ,"5c 4c 3c 2c Ac" -- lowest Straight Flush
-                    ,"Ah Kh Qh Jh Th"] -- Royal Flush
-                isStrictlyOrdered [_] = True
-                isStrictlyOrdered (x:y:xs) = x < y && isStrictlyOrdered (y:xs) 
+            let s = ["7s 5c 4d 3d 2c" ,"As Kc Qd Jd 9c"
+                    ,"2h 2d 5c 4c 3c" ,"Ah Ad Kc Qc Jc"
+                    ,"2c 2s 3s 3c 4h" ,"Ac As Ks Kc Jh"
+                    ,"2h 2d 2c 4c 3c" ,"Ah Ad Ac Qc Jc"
+                    ,"5h 4s 3d 2c Ah" ,"Ah Ks Qd Jc Th"
+                    ,"7c 5c 4c 3c 2c" ,"Ac Kc Qc Jc 9c"
+                    ,"2h 2d 2c 3h 3c" ,"Ah Ad Ac Kh Kc"
+                    ,"2c 2s 2h 2d 3c" ,"Ac As Ah Ad Jc"
+                    ,"5c 4c 3c 2c Ac" ,"Ah Kh Qh Jh Th"]
+                isOrdered [_] = True
+                isOrdered (x:y:xs) = x < y && isOrdered (y:xs) 
                 r = map (ranking.cards) s
-            isStrictlyOrdered r `shouldBe` True
+            isOrdered r `shouldBe` True
 
             </script>
 			</div>

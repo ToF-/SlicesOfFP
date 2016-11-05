@@ -17,9 +17,9 @@ Given this file `input.txt` :
     7s Ts Ks Kd 9d
 
 
-When `runhaskell PokerHands.hs <input.txt`
+after `runhaskell PokerHands.hs <input.txt`
 
-Then the output is
+then the output is
 
     Kc 9s Ks Kd 9d 3c 6d Full House (winner)
     9c Ah Ks Kd 9d 3c 6d Two Pair
@@ -37,7 +37,7 @@ in the line: `  8s 9d Th Js Qd Kc Ah  `
 
 `h`,`s`,`d`,`c` stand for *Hearts*, *Spades*, *Diamonds*, *Clubs*
 
-Five little problems:
+Texas Hold'em in five steps:
 
 1. Interpret Strings in terms of Cards
 2. Compare Cards (by Rank or by Suit)
@@ -124,7 +124,7 @@ Patterns allow for expressing distinct cases
 ----
 ### Lists
 
-List are a way to collect values of the same type
+A way to collect values of the same type
 
 Ghci:
 
@@ -152,8 +152,9 @@ Write a function *average* that passes this test:
                 average [2, 4, 12] `shouldBe` 6.0
 
 ----
-### Pattern Matching
+### Let's write some functions
 
+using Pattern Matching to denote cases: 
 
     average [ ]  = 0.0
     average xs   = sum xs / length xs
@@ -161,9 +162,9 @@ Write a function *average* that passes this test:
 ----
 ### Pattern Matching
 
-Patterns allow for deconstructing Data 
+also allows for deconstructing data 
 
-Two examples:
+two examples:
 
     isOrdered [a,b]   = a <= b
     isOrdered [a,b,c] = isOrdered [a,b] && isOrdered [b,c]
@@ -178,10 +179,9 @@ Some useful checks about `compare`
 
     describe "compare" $ do
         it "should compare values of any type of class Ord" $ do
-            compare 42 17  `shouldBe` GT
-            compare 17 42  `shouldBe` LT
-            compare 11 11  `shouldBe` EQ
-
+            compare 42 17       `shouldBe` GT
+            compare 'A' 'B'     `shouldBe` LT
+            compare 11.3 11.3   `shouldBe` EQ
             compare "cat" "dog" `shouldBe` LT
 
 ----
@@ -191,7 +191,7 @@ There's no way that this test can pass:
 
     describe "using Strings as Cards" $ do
         it "cannot give satisfactory comparisons" $ do
-            compare "8d" "9c"  `shouldBe` LT
+            compare "Td" "Jc"  `shouldBe` LT
             compare "8d" "8c"  `shouldBe` EQ
             compare "Ah" "Jc"  `shouldBe` GT
 

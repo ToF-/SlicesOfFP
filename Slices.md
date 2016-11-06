@@ -86,7 +86,10 @@ Running the test:
 
 
 ----
-### Sequencing actions with *do*:
+### Writing a suite of tests
+
+
+Sequencing actions with *do*:
 
     import Test.Hspec
 
@@ -97,8 +100,15 @@ Running the test:
             it "should not fail" $do
                 2*2 `shouldBe` 4
 
+- the `$` operator is an alternative to parentheses:
+    - `f $ x y z` ≡ f (x y z)`
+- the `do` construct allows for sequencing of actions
+- the actions must be indented under their sequencing `do`
+- we will use `do` and actions only in the tests
+  
 ----
 ### Let's write some functions
+
 
 Write a function *response* that passes this test:
 
@@ -115,13 +125,42 @@ Write a function *response* that passes this test:
 ----
 ### Pattern Matching
 
-Patterns allow for expressing distinct cases 
-
 
     response 'Y' = True
     response 'y' = True
     response 'N' = False
     response 'n' = False
+
+Patterns allow for expressing distinct cases 
+
+----
+### Pattern Matching
+
+Write a function *label* that passes this test:
+
+    import Test.Hspec
+
+    main = hspec $ do
+        describe "label" $ do
+            it "should be a yes or a no" $ do
+                label "WO" = "Wool"
+                label "CO" = "Cotton"
+                label "PA" = "Nylon"
+                label "PC" = "Acrylic"
+                label "XX" = "--- unknown label ---"
+                label "YY" = "--- unknown label ---"
+
+----
+### Pattern Matching
+
+
+    label "WO" = "Wool"
+    label "CO" = "Cotton"
+    label "PA" = "Nylon"
+    label "PC" = "Acrylic"
+    label   _  = "--- unknown label ---"
+
+The underscore symbol in the left part of the equality denotes *any value that is distinct from the values in the preceding patterns*.
 
 ----
 ### Lists
@@ -161,16 +200,21 @@ using Pattern Matching to denote cases:
     average [ ]  = 0.0
     average xs   = sum xs / length xs
 
+A variable defined in the left part of the equality receives the argument value and can be used in the right part.
+
 ----
 ### Pattern Matching
 
-also allows for deconstructing data 
 
     isOrdered [a,b]   = a <= b
     isOrdered [a,b,c] = isOrdered [a,b] && isOrdered [b,c]
 
     product []     = 1
     product (x:xs) = x * product xs
+
+Patterns also allow for deconstructing data:
+- elements of a list
+- head of a list and remaining list 
 
 ----
 ### Comparing values
@@ -232,17 +276,25 @@ Write a function `suit` that passes this test
             suit "Td" == suit "Js" `shouldBe` False
 
 ----
-### Types = a way to check the meaning of programs
+### Types
 
-We have types:
+Types are a way to check the meaning of programs
+
+All expressions, all function definitions have a type.
+Although Haskell can infer our types, we can explicitely declare function signatures:
 
     rank :: String -> Int
     suit :: String -> Char
 
-`rank False ` or ` rank 3.1415 ` are not legal
+----
+### Types
+
+Thanks to types, expressions like
+- `rank False ` 
+- ` rank 3.1415 ` 
+are not legal
 
 But:
-
 - ` rank "Foo" ` is still legal
 - `compare (rank "#&") (rank "18")` == ... ?
 - every *String* value is not a valid *Card* value
@@ -268,7 +320,7 @@ Ghci:
 	snd ('A', True)  ⏎
 
 ----
-### Types = a way to think about the problem
+### a way to think about the problem
  
 Let's define types synonyms:
 
@@ -286,9 +338,7 @@ And a new function from `String` to `Card`:
 ----
 ### Comparing cards, improved
 
-Write the function:
-
-    card :: String -> Card
+Write the function: `card :: String -> Card`
 
 so that the test pass
 
@@ -301,6 +351,14 @@ so that the test pass
             compare (rank (card "Jd")) (rank (card "Qh")) `shouldBe` LT 
             compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
             compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
+
+Hint:
+
+    card [r,s] = (charToRank r, charToSuit s)
+
+    charToRank 'A' = 14
+    charToRank 'K' = 13
+    ...
 
 ----
 ### Comparing cards, improved
@@ -470,7 +528,7 @@ Write the function `ranks` such that
 
     describe "ranks" $ do
         it "should give the sorted ranks of a hand" $ do
-            ranks (cards "8d Ah Qc")  `shouldBe` [Eight,Queen,Ace]
+            ranks (cards "8d Ah Qc")  `shouldBe` [Ace, Queen, Eight]
 
 ----
 ### Grouping
@@ -570,7 +628,7 @@ Write the function `flush`:
 
 Hint: use
 - `group`
-- `lenght`
+- `length`
 - pattern matching with guards
 
 ----
@@ -633,3 +691,4 @@ Comparing two hands ranking involves comparing their category, and if their cate
 ### Determining a Ranking
 
 QQQ todo : promote and qualify..
+            ranks (cards "8d Ah Qc")  `shouldBe` [,AceQueen,Eight]

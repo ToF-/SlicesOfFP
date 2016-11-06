@@ -73,12 +73,14 @@ Lauch *ghci* and try some functions:
 
 A short program named *Specs.hs*:
 
-    import Test.Hspec
+```haskell
+import Test.Hspec
 
-    main = hspec 
-        (describe "a test" 
-            (it "should pass" 
-                (2+2  `shouldBe` 4)))
+main = hspec 
+(describe "a test" 
+ (it "should pass" 
+  (2+2  `shouldBe` 4)))
+```
 
 Running the test:
 
@@ -126,10 +128,12 @@ Write a function *response* that passes this test:
 ### Pattern Matching
 
 
-    response 'Y' = True
-    response 'y' = True
-    response 'N' = False
-    response 'n' = False
+```haskell
+response 'Y' = True
+response 'y' = True
+response 'N' = False
+response 'n' = False
+```
 
 Patterns allow for expressing distinct cases 
 

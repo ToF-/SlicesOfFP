@@ -826,7 +826,8 @@ We can compare two hands in Texas Hold'em
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.configure({languages:["haskell"]});
+                                                                                                hljs.initHighlightingOnLoad(); } }
 				]
 			});
 		</script>

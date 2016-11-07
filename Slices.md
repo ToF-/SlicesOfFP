@@ -185,6 +185,8 @@ Ghci:
 
     reverse "Hello World" ⏎
 
+    concat ["A","List","Of","Lists"] ⏎
+
 
 ----
 #### Let's write some functions
@@ -599,14 +601,14 @@ Hint:
 ----
 ### Special categories
 
-- A *Straight* is like a *HighCard* with ranks forming a sequence
-    - e.g. Th 9d 8c 7s 6s
-- A *Flush* is like a *HighCard* with all cards of same suit
-    - e.g. Kh Jh 9h 7h 6h
-- A *Straight Flush* is a *Straight* and a *Flush*
-    - e.g Th 9h 8h 7h 6h 
-- A *Royal Flush* is a *Straight Flush* starting with an Ace
-    - e.g. Ah Kh Qh Jh Th
+A *Straight* is like a *HighCard* with ranks forming a sequence
+
+e.g. `Th 9d 8c 7s 6s`
+
+
+A *Flush* is like a *HighCard* with all cards of same suit
+
+e.g. `Kh Jh 9h 7h 6h`
 
 ----
 ### Guards
@@ -665,10 +667,10 @@ Method:
 
 Tuples, like Lists can be compared according to lexicographic order:
 
-`(a,b) < (c,d) ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
+ `(a,b) < (c,d) ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
 
 
-`[a,b] < [c,d] ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
+ `[a,b] < [c,d] ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
 
 This allows for comparing hand by category then ranks:
 - If two hands have the same category, the winner is the hand with the highest rank in the category.
@@ -677,17 +679,71 @@ This allows for comparing hand by category then ranks:
 ----
 #### Comparing two hands
 
-Comparing two hands involves comparing their category, and if their categories are equal, comparing the ranks.
+Comparing two hands involves comparing their category, and if their categories are equal, comparing the ranks in the order given by the groups.
 
-Creating values of type `Ranking` allows for such comparisons.
-
+Creating values of type `Ranking` allows for such comparisons, provided that the ranks are sorted in reverse order.
 
     type Ranking = (Category, [Ranks])
 
-    ranking :: [Cards] -> Ranking
+    it "should correctly compare two ranking values" $ do 
+        (OnePair,[Ace,Ace,Ten,Eight,Five]) 
+            > (OnePair, [Ace,Ace,Eight,Seven,Two])
+             `shouldBe` True
 
 ----
 ### Determining a Ranking
+
+Create the function:
+
+`ranking :: [Cards] -> Ranking`
+
+    it "should keep the ranking of a hand" $ do
+        ranking (cards "2c 2s 3s 3c 4h")
+            `shouldBe` (TwoPairs, [Three,Three,Two,Two,Four])
+
+        ranking (cards "2c 2s As 3c 4h")
+            `shouldBe` (OnePair, [Two,Two,Ace,Four,Three])
+
+Hint:
+
+    ranking cs = (cat,rs)
+    where
+        cat = category gs
+        rs  = concat gs
+        gs  =  ...
+
+----
+### Special Categories (cont.)
+
+A *Straight Flush* is a *Straight* and a *Flush*
+
+e.g `Th 9h 8h 7h 6h`
+
+A *Royal Flush* is a *Straight Flush* starting with an Ace
+
+e.g. `Ah Kh Qh Jh Th`
+
+
+----
+### Promoting to special categories
+
+    promote :: Ranking -> Ranking
+    promote (HighCard,[Ace,Five,_,_,_]) = (Straight,
+                                          [Five,Four,Three,Two,Ace])
+    promote (HighCard,rs) | isStraight rs = (Straight, rs)
+    promote r = r
+
+    flushes :: Ranking -> Bool -> Ranking
+    flushes True (HighCard,rs) = (Flush, rs)
+    flushes True (Straight,[Ace,_,_,_,_] = (RoyalFlush,
+                                            [Ace,King,Queen,Jack,Ten])
+    flushes True (Straight,rs) = (StraightFlush rs)
+    flushes False r = r
+
+
+----
+### Ranking Final Test
+
 
         it "should correctly order a list by ranking" $ do
             let s = ["7s 5c 4d 3d 2c" ,"As Kc Qd Jd 9c"
@@ -704,8 +760,17 @@ Creating values of type `Ranking` allows for such comparisons.
                 r = map (ranking.cards) s
             isOrdered r `shouldBe` True
 
-----
-### Determining a Ranking
+Hint:
+    
+    ranking cs = flushes (isFlush cs) (promote (cat, rs))
+    where
+    cat = gategory gs
+    rs  = concat   gs
+    gs  = groups (ranks cs)
 
-QQQ todo : promote and qualify..
-            ranks (cards "8d Ah Qc")  `shouldBe` [,AceQueen,Eight]
+----
+# Checkpoint #2
+
+We can compare two hands in Texas Hold'em
+
+#Well Done!!

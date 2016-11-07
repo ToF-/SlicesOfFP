@@ -151,7 +151,15 @@ body {
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3); }
 
 .reveal code {
-  font-family: monospace; }
+    font-family: monospace;
+}
+
+.reveal p code,
+.reveal li code {
+    background-color: #F0F0F0;
+    color: blue;
+    font-size: auto;
+}
 
 .reveal pre code {
   display: block;

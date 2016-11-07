@@ -7,7 +7,7 @@
 		<title>reveal.js</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/white.css">
+		<link rel="stylesheet" href="css/theme/White.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/default.css">
@@ -29,10 +29,10 @@ p { text-align: left; }
 	<body>
 		<div class="reveal">
 			<div class="slides">
-<section data-markdown data-separator="^----$" data-separator-vertical="^\n--\n$ ">
+<section data-markdown data-separator="^----$" data-separator-vertical="^\n--\n$">
           <script type="text/template">
 ## Slices of Functional Programming
-Xavier Detant
+Xavier Détant
 
 Christophe Thibaut
 
@@ -42,28 +42,25 @@ Christophe Thibaut
 
 Given this file `input.txt` :
 
-```bash
     Kc 9s Ks Kd 9d 3c 6d 
     9c Ah Ks Kd 9d 3c 6d
     Ac Qc Ks Kd 9d 3c 
     9h 5s 
     4d 2d Ks Kd 9d 3c 6d
     7s Ts Ks Kd 9d
-```
+
 
 after `runhaskell PokerHands.hs <input.txt`
 
 then the output is
 
-```bash
     Kc 9s Ks Kd 9d 3c 6d Full House (winner)
     9c Ah Ks Kd 9d 3c 6d Two Pair
     Ac Qc Ks Kd 9d 3c 
     9h 5s 
     4d 2d Ks Kd 9d 3c 6d Flush
     7s Ts Ks Kd 9d
-```
-				   
+
 ----
 ### The Texas Hold'em Kata
 
@@ -87,7 +84,7 @@ Texas Hold'em in five steps:
 
 Lauch *ghci* and try some functions:
 
-```haskell
+
     sqrt 1764 ⏎
 
     Data.List.subsequences "ABCD" ⏎
@@ -103,7 +100,6 @@ Lauch *ghci* and try some functions:
     (*) 6 ((+) 3 4) ⏎
 
     Data.List.insert 42 [1,32,87] ⏎
-```
 
 ----
 ### Writing a test
@@ -121,17 +117,15 @@ main = hspec
 
 Running the test:
 
-```bash
-runhaskell Specs ⏎
-```
+    runhaskell Specs ⏎
+
 
 ----
 ### Writing a suite of tests
 
 
-Sequencing actions with *`do`*:
+Sequencing actions with *do*:
 
-```haskell
     import Test.Hspec
 
     main = hspec $ do
@@ -140,10 +134,9 @@ Sequencing actions with *`do`*:
                 2+2  `shouldBe` 4
             it "should not fail" $do
                 2*2 `shouldBe` 4
-```
-				   
+
 - the `$` operator is an alternative to parentheses:
-    - `f $ x y z` ≡ `f (x y z)`
+    - `f $ x y z` ≡ f (x y z)`
 - the `do` construct allows for sequencing of actions
 - the actions must be indented under their sequencing `do`
 - we will use `do` and actions only in the tests
@@ -153,7 +146,7 @@ Sequencing actions with *`do`*:
 
 
 Write a function *response* that passes this test:
-```haskell
+
     import Test.Hspec
 
     main = hspec $ do
@@ -163,7 +156,7 @@ Write a function *response* that passes this test:
                 response 'n' `shouldBe` False
                 response 'Y' `shouldBe` True
                 response 'y' `shouldBe` True
-```
+
 ----
 ### Pattern Matching
 
@@ -181,7 +174,7 @@ Patterns allow for expressing distinct cases
 ### Pattern Matching
 
 Write a function *label* that passes this test:
-```haskell
+
     import Test.Hspec
 
     main = hspec $ do
@@ -193,17 +186,17 @@ Write a function *label* that passes this test:
                 label "PC" = "Acrylic"
                 label "XX" = "--- unknown label ---"
                 label "YY" = "--- unknown label ---"
-```
+
 ----
 ### Pattern Matching
 
-```haskell
+
     label "WO" = "Wool"
     label "CO" = "Cotton"
     label "PA" = "Nylon"
     label "PC" = "Acrylic"
     label   _  = "--- unknown label ---"
-```
+
 The underscore symbol in the left part of the equality denotes *any value that is distinct from the values in the preceding patterns*.
 
 ----
@@ -212,7 +205,7 @@ The underscore symbol in the left part of the equality denotes *any value that i
 A way to collect values of the same type
 
 Ghci:
-```haskell
+
 	1 : 2 : 3 : [] ⏎
 
 	'a' : 'b' : 'c' : "" ⏎
@@ -224,38 +217,38 @@ Ghci:
 	tail [4,8,0,7]  ⏎
 
     reverse "Hello World" ⏎
-```
+
 
 ----
 #### Let's write some functions
 
 Write a function *average* that passes this test:
-```haskell
+
         describe "average" $ do
             it "should calculate the average" $ do
                 average [ ]        `shouldBe` 0.0
                 average [2, 4, 12] `shouldBe` 6.0
-```
+
 ----
 ### Let's write some functions
 
 using Pattern Matching to denote cases: 
-```haskell
+
     average [ ]  = 0.0
     average xs   = sum xs / length xs
-```
+
 A variable defined in the left part of the equality receives the argument value and can be used in the right part.
 
 ----
 ### Pattern Matching
 
-```haskell
+
     isOrdered [a,b]   = a <= b
     isOrdered [a,b,c] = isOrdered [a,b] && isOrdered [b,c]
 
     product []     = 1
     product (x:xs) = x * product xs
-```
+
 Patterns also allow for deconstructing data:
 - elements of a list
 - head of a list and remaining list 
@@ -264,25 +257,25 @@ Patterns also allow for deconstructing data:
 ### Comparing values
 
 Some useful checks about `compare`
-```haskell
+
     describe "compare" $ do
         it "should compare values of any type of class Ord" $ do
             compare 42 17       `shouldBe` GT
             compare 'A' 'B'     `shouldBe` LT
             compare 11.3 11.3   `shouldBe` EQ
             compare "cat" "dog" `shouldBe` LT
-```
+
 ----
 ### Strings are not Cards!
 
 There's no way that this test can pass:
-```haskell
+
     describe "using Strings as Cards" $ do
         it "cannot give satisfactory comparisons" $ do
             compare "Td" "Jc"  `shouldBe` LT
             compare "8d" "8c"  `shouldBe` EQ
             compare "Ah" "Jc"  `shouldBe` GT
-```
+
 unless we rewrite `compare`
 
 ----
@@ -290,7 +283,7 @@ unless we rewrite `compare`
 
 Write a function `rank` that passes this test:
 
-```haskell
+
     describe "comparing card by rank" $ do
         it "should follow the rules of poker" $ do
             compare (rank "8d") (rank "6h") `shouldBe` GT
@@ -300,25 +293,25 @@ Write a function `rank` that passes this test:
             compare (rank "Jd") (rank "Qh") `shouldBe` LT 
             compare (rank "Qd") (rank "Kh") `shouldBe` LT 
             compare (rank "Kd") (rank "Ah") `shouldBe` LT 
-```
+
 Hint:
-```haskell
+
     rank ['A',_] = 14
     rank ['K',_] = 13
     . . .
-```
+
 ----
 ### How to compare cards by suit
 
 Write a function `suit` that passes this test
-```haskell
+
     describe "comparing card by suit" $ do
         it "should follow the rules of poker" $ do
             suit "8d" == suit "6d" `shouldBe` True
             suit "4d" == suit "4h" `shouldBe` False
             suit "9d" == suit "Tc" `shouldBe` True
             suit "Td" == suit "Js" `shouldBe` False
-```
+
 ----
 ### Types
 
@@ -326,10 +319,10 @@ Types are a way to check the meaning of programs
 
 All expressions, all function definitions have a type.
 Although Haskell can infer our types, we can explicitely declare function signatures:
-```haskell
+
     rank :: String -> Int
     suit :: String -> Char
-```
+
 ----
 ### Types
 
@@ -350,7 +343,7 @@ But:
 A way to gather values of different types
 
 Ghci:
-```haskell
+
 	:type (EQ,'@', False) ⏎
 
 	:type ('A',True) ⏎
@@ -362,30 +355,30 @@ Ghci:
 	fst ('A', True) ⏎
 
 	snd ('A', True)  ⏎
-```
+
 ----
 ### a way to think about the problem
  
 Let's define types synonyms:
-```haskell
+
     type Card = (Rank, Suit) 
     type Rank = Int
     type Suit = Char
 
     rank :: Card -> Rank
     suit :: Card -> Suit
-```
+
 And a new function from `String` to `Card`:
-```haskell
+
     card :: String -> Card
-```
+
 ----
 ### Comparing cards, improved
 
 Write the function: `card :: String -> Card`
 
 so that the test pass
-```haskell
+
     describe "comparing card by rank" $ do
         it "should follow the rules of poker" $ do
             compare (rank (card "8d")) (rank (card "6h")) `shouldBe` GT
@@ -395,22 +388,22 @@ so that the test pass
             compare (rank (card "Jd")) (rank (card "Qh")) `shouldBe` LT 
             compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
             compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
-```
+
 Hint:
-```haskell
+
     card [r,s] = (charToRank r, charToSuit s)
 
     charToRank 'A' = 14
     charToRank 'K' = 13
     ...
-```
+
 ----
 ### Comparing cards, improved
-```haskell
+
     card :: String -> Card
     rank :: Card -> Rank
     suit :: Card -> Suit
-```
+
 Better because:
 
 - once conversion is done, the comparing takes care of itself
@@ -424,7 +417,7 @@ But:
 ### Types = a way to think about a problem
 
 Let's create new types:
-```haskell
+
     data Suit = Hearts | Clubs | Diamonds | Spades
         deriving (Eq, Show)
 
@@ -433,25 +426,25 @@ Let's create new types:
         deriving (Eq, Ord, Enum, Show)
 
     type Card = (Rank, Suit)
-```
+
 Rewrite the `card` function so that the tests still pass
 
 Hint:
-```haskell
+
     card [r,s] = (charToRank c, charToSuit s)
 
     charToRank 'A' = Ace
     ...
- ```
+ 
 ----
 ### Type Class = a way to define type conformity
 
 Saying that
-```haskell
+
     data Rank = Two | Three | Four | Five | Six | Seven | Eight 
               | Nine | Ten | Jack | Queen | King | Ace
         deriving (Eq, Ord, Enum, Show)
-```
+
 means that values of type `Rank`
 
 - can be compared with `==` and `/=` 
@@ -463,14 +456,14 @@ means that values of type `Rank`
 ### Type Class = a way to define type conformity
 
 Ghci:
-```haskell
+
     :load PokerHand.hs ⏎
 
     Two < Three ⏎
     Ace > King ⏎
     show "Queen" ⏎
     card "8d" ⏎
-```
+
 Better design:
 
 - the type `Card` can have only 52 values.
@@ -492,7 +485,7 @@ We have our first feature: comparing cards
 ### Passing Functions to Functions
 
 Ghci:
-```haskell
+
     import Data.Ord ⏎
 
     :type compare ⏎
@@ -504,27 +497,27 @@ Ghci:
     :load PokerHand.hs ⏎
 
     comparing rank (card "8c") (card "5d") ⏎
-```
+
 the function `rank` is passed to the `comparing` function
 
 ----
 ### Combining Functions
 
 Ghci:
-```haskell
+
     :type (.) ⏎
 
     (length . words) "time flies like an arrow" ⏎
 
     comparing (rank . card) "8c" "5d" ⏎
-```
+
 `(f . g) x == f (g x)` 
 
 ----
 ### Combining Functions
 
 Refactor the test using `comparing` and the `. ` operator
-```haskell
+
     describe "comparing card by rank" $ do
         it "should follow the rules of poker" $ do
             compare (rank (card "8d")) (rank (card "6h")) `shouldBe` GT
@@ -534,58 +527,58 @@ Refactor the test using `comparing` and the `. ` operator
             compare (rank (card "Jd")) (rank (card "Qh")) `shouldBe` LT 
             compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
             compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
-```
+
 ----
 ### Mapping a function to a list of values
 
 Ghci:
-```haskell
+
     :type map ⏎
     map negate [-34,42,17] ⏎
 
     map sqrt [1,2,3,4,5] ⏎
-```
+
 ----
 ### Collecting Cards
 
 Write the function `cards` such that
-```haskell
+
     describe "cards" $ do
         it "should collect cards from a string" $ do
             cards "8d Ah Qc"  `shouldBe`
                  [(Eight,Diamonds),(Ace,Hearts),(Queen,Clubs)]
-```
+
 ----
 ### Sorting
-```haskell
+
     sort [42,3,17,1,22,4,38] ⏎
 
     sortBy compare "HELLO" ⏎
 
     sortBy (comparing length) (words "time flies like an arrow") ⏎
-```
+
 
 ----
 ### Ranks of a hand
 
 Write the function `ranks` such that
-```haskell
+
     describe "ranks" $ do
         it "should give the sorted ranks of a hand" $ do
             ranks (cards "8d Ah Qc")  `shouldBe` [Ace, Queen, Eight]
-```
+
 ----
 ### Grouping
-```haskell
+
     group "HELLO" ⏎
     
     (group . sort) "Cats and Dogs"
-```
+
 ----
 ### Groups of Cards
 
 Write the function `groups` such that
-```haskell
+
     describe "groups" $ do
         it "should group and sort the ranks of a hand" $ do
             groups (cards "8d Ah Qc 8h 8s")  `shouldBe`
@@ -593,7 +586,7 @@ Write the function `groups` such that
 
             groups (cards "8d Ah Qc 8h As")  `shouldBe`
                  [[Ace,Ace][EIght,Eight],[Queen]]
-```
+
 Hint: use
 - `sort`
 - `sortBy`
@@ -605,19 +598,19 @@ Hint: use
 ### Categorizing groups of Cards
 
 A data type for Category
-```haskell
+
     data Category = HighCard | OnePair | TwoPairs | ThreeOfAKind 
                   | Straight | Flush | FullHouse | FourOfAKind 
                   | StraightFlush | RoyalFlush
         deriving (Eq,Ord,Show)
-```
+
 ----
 ### Categorizing groups of Cards
 
 Write the function
 
  `category :: [[Rank]] -> Category`
-```haskell
+
     describe "category" $ do
         it "should determine the category of a hand" $ do
             let hs = ["4s 5d Kc Tc 3d"
@@ -629,13 +622,13 @@ Write the function
             map (category.groups.cards) hs ==  
                     [HighCard, OnePair, TwoPairs
                     ,ThreeOfAKind, FullHouse, FourOfAKind]
-```
+
 Hint:
-```haskell
+
     category [_,_,_,_,_]   = HighCard
     category [[_,_],_,_,_] = OnePair
     ...
-```
+
 ----
 ### Special categories
 
@@ -651,25 +644,25 @@ Hint:
 ----
 ### Guards
 
-Pattern matching can be subjected to conditions, called guards
-```haskell
+Pattern matching can be applied with conditions, called guards
+
     power n m | m >= 0    = product (replicate m n)
               | otherwise = error "negative exponent"   
 
     sign n | n < 0 = -1
            | n > 0 =  1
            | _     =  0
-```
+
 ----
 ### Detecting a Flush
 
 Write the function `flush`:
-```haskell
+
     describe "flush" $ do
         it "should detect when all cards have the same suit" $ do
             flush (cards "8d Ah 4d 3d Ad") `shouldBe` False
             flush (cards "8h Ah 4h 3h Kh") `shouldBe` True
-```
+
 Hint: use
 - `group`
 - `length`
@@ -679,7 +672,7 @@ Hint: use
 ### The Enum Type Class
 
 Ghci:
-```haskell
+
     fromEnum False ⏎
     fromEnum True ⏎
 
@@ -687,7 +680,7 @@ Ghci:
 
     fromEnum Ace ⏎
     fromEnum King ⏎
-```
+
 ----
 ### Detecting a Straight
 
@@ -696,26 +689,39 @@ Method:
 - And   the first rank value = the last rank value + 4
 - Then  the category is Straight
 
-```haskell
+
     isStraight [[a],_,_,_,[b]] = fromEnum a == 4 + fromEnum b 
     isStraight _               = False 
-```
+
 ----
-### Determining a Ranking
+### Lexicographic Order
 
-If two hands have the same category, the winner is the hand with the highest rank in the category.
+Tuples, like Lists can be compared according to lexicographic order:
 
-If two hands have the same category and rank, the winner is the hand with the highest remaining cards. 
+`(a,b) < (c,d) ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
 
-Comparing two hands ranking involves comparing their category, and if their categories are equal, comparing the ranks 
-```haskell
+
+`[a,b] < [c,d] ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
+
+This allows for comparing hand by category then ranks:
+- If two hands have the same category, the winner is the hand with the highest rank in the category.
+- If two hands have the same category and rank, the winner is the hand with the highest remaining cards. 
+
+----
+#### Comparing two hands
+
+Comparing two hands involves comparing their category, and if their categories are equal, comparing the ranks.
+
+Creating values of type `Ranking` allows for such comparisons.
+
+
     type Ranking = (Category, [Ranks])
 
     ranking :: [Cards] -> Ranking
-```
+
 ----
 ### Determining a Ranking
-```haskell
+
         it "should correctly order a list by ranking" $ do
             let s = ["7s 5c 4d 3d 2c" ,"As Kc Qd Jd 9c"
                     ,"2h 2d 5c 4c 3c" ,"Ah Ad Kc Qc Jc"
@@ -730,7 +736,7 @@ Comparing two hands ranking involves comparing their category, and if their cate
                 isOrdered (x:y:xs) = x < y && isOrdered (y:xs) 
                 r = map (ranking.cards) s
             isOrdered r `shouldBe` True
-```
+
 ----
 ### Determining a Ranking
 

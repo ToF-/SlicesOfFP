@@ -611,7 +611,7 @@ Hint:
 ----
 ### Guards
 
-Pattern matching can be subjected to conditions, called guards
+Pattern matching can be applied with conditions, called guards
 
     power n m | m >= 0    = product (replicate m n)
               | otherwise = error "negative exponent"   
@@ -661,13 +661,26 @@ Method:
     isStraight _               = False 
 
 ----
-### Determining a Ranking
+### Lexicographic Order
 
-If two hands have the same category, the winner is the hand with the highest rank in the category.
+Tuples, like Lists can be compared according to lexicographic order:
 
-If two hands have the same category and rank, the winner is the hand with the highest remaining cards. 
+`(a,b) < (c,d) ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
 
-Comparing two hands ranking involves comparing their category, and if their categories are equal, comparing the ranks 
+
+`[a,b] < [c,d] ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
+
+This allows for comparing hand by category then ranks:
+- If two hands have the same category, the winner is the hand with the highest rank in the category.
+- If two hands have the same category and rank, the winner is the hand with the highest remaining cards. 
+
+----
+#### Comparing two hands
+
+Comparing two hands involves comparing their category, and if their categories are equal, comparing the ranks.
+
+Creating values of type `Ranking` allows for such comparisons.
+
 
     type Ranking = (Category, [Ranks])
 

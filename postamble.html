@@ -16,6 +16,8 @@
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'socket.io/socket.io.js', async: true },
+					{ src: 'plugin/notes-server/client.js', async: true },
 					{ src: 'plugin/notes/notes.js', async: true },
                     { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.configure({languages:["bash"]});
                                                                                                 hljs.initHighlightingOnLoad(); } }

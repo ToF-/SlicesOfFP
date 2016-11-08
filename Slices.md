@@ -1,5 +1,5 @@
 ## Slices of Functional Programming
-Xavier Détant
+Xavier Detant
 
 Christophe Thibaut
 
@@ -191,16 +191,16 @@ Write a function *average* that passes this test:
 
         describe "average" $ do
             it "should calculate the average" $ do
-                average [ ]        `shouldBe` 0.0
-                average [2, 4, 12] `shouldBe` 6.0
+                average [ ]        `shouldBe` 0
+                average [2, 4, 12] `shouldBe` 6
 
 ----
 ### Let's write some functions
 
 using Pattern Matching to denote cases: 
 
-    average [ ]  = 0.0
-    average xs   = sum xs / length xs
+    average [ ]  = 0
+    average xs   = sum xs `div` length xs
 
 A variable defined in the left part of the equality receives the argument value and can be used in the right part.
 

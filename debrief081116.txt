@@ -1,0 +1,39 @@
+public content
+- fini sur un checkpoint : qui a du sens
+- ping pong fonctionne (animation+aide / explications)
+- on a perdu personne
+- clarté de la prez : fonte, fond, visuel
+- la prez marche si on copie colle les tests 
+- le sujet marche
+- la progression marche (pattern matching, types primitif, listes, tuples, type data, type class)
+- les explications séparation des sujets (conversion / comparaison)
+- highlight.js pas nécessaire
+- on code pas
+- on s'est adapté
+
+
+pour améliorer:
+- répéter le kata
+- répéter la présentation
+- des tests compilent pas
+- oubli de module ... where : après checkpoint 1 répartir le code et les tests et présenter module
+- un système pour distribuer les snippets une à une
+- remplacer card par stringToCard
+- intégrer digitToInt
+- planifier sur une plus longue: le dernier km ensemble 
+- remplacement de String par (Rank,Suit) et ce qu'il advient des fonctions rank et suit 
+- la fonction card devrait être présente dès le début : on ne casse pas les tests
+- certains participants anticipent toEnum au lieu de 10 patterns. 
+- introduire les type class plus naturellement
+- outside in ou bottom up?
+- rank :: String -> Int, suit :: String -> char / REFACTORING / Types
+- diffuser la prez sur internet
+- avoir une clé ou plusieurs USB prête
+- plus de focus
+
+
+action: répéter le kata en mode débutant.
+
+ 
+
+

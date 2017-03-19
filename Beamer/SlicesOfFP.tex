@@ -358,520 +358,445 @@ And a new function from ~String~ to ~Card~:
 \begin{haskell}
 card :: String -> Card
 \end{haskell}
-
-\end{frame}
-\end{document}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Comparing cards, improved}
-
-Write the function: `card :: String -> Card`
-
+Write the function: ~card :: String -> Card~ 
 so that the test pass
-
-    describe "comparing card by rank" $ do
-        it "should follow the rules of poker" $ do
-            compare (rank (card "8d")) (rank (card "6h")) `shouldBe` GT
-            compare (rank (card "4d")) (rank (card "4h")) `shouldBe` EQ
-            compare (rank (card "9d")) (rank (card "Th")) `shouldBe` LT 
-            compare (rank (card "Td")) (rank (card "Jh")) `shouldBe` LT 
-            compare (rank (card "Jd")) (rank (card "Qh")) `shouldBe` LT 
-            compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
-            compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
-
+\begin{hspec}
+describe "comparing card by rank" $ do
+    it "should follow the rules of poker" $ do
+        compare (rank (card "8d")) (rank (card "6h")) `shouldBe` GT
+        compare (rank (card "4d")) (rank (card "4h")) `shouldBe` EQ
+        compare (rank (card "9d")) (rank (card "Th")) `shouldBe` LT 
+        compare (rank (card "Td")) (rank (card "Jh")) `shouldBe` LT 
+        compare (rank (card "Jd")) (rank (card "Qh")) `shouldBe` LT 
+        compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
+        compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
+\end{hspec}
 Hint:
+\begin{haskell}
+card [r,s] = (charToRank r, charToSuit s)
 
-    card [r,s] = (charToRank r, charToSuit s)
-
-    charToRank 'A' = 14
-    charToRank 'K' = 13
-    ...
-
-\end{frame}
-\end{document}
+charToRank 'A' = 14
+charToRank 'K' = 13
+...
+\end{haskell}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Comparing cards, improved}
-
-    card :: String -> Card
-    rank :: Card -> Rank
-    suit :: Card -> Suit
-
+\begin{haskell}
+card :: String -> Card
+rank :: Card -> Rank
+suit :: Card -> Suit
+\end{haskell}
 Better because:
-
+\begin{itemize}
 \item  once conversion is done, the comparing takes care of itself
 \item  bad input is detected at conversion, not in comparisons
-
+\end{itemize}
 But:
-
-\item  you can still do silly things like ` rank (4807,'@') `
-
-\end{frame}
-\end{document}
+\begin{itemize}
+\item  you can still do silly things like ~rank (4807,'@')~ 
+\end{itemize}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Types = a way to think about a problem}
-
 Let's create new types:
+\begin{haskell}
+data Suit = Hearts | Clubs | Diamonds | Spades
+    deriving (Eq, Show)
 
-    data Suit = Hearts | Clubs | Diamonds | Spades
-        deriving (Eq, Show)
+data Rank = Two | Three | Four | Five | Six | Seven | Eight 
+          | Nine | Ten | Jack | Queen | King | Ace
+    deriving (Eq, Ord, Enum, Show)
 
-    data Rank = Two | Three | Four | Five | Six | Seven | Eight 
-              | Nine | Ten | Jack | Queen | King | Ace
-        deriving (Eq, Ord, Enum, Show)
-
-    type Card = (Rank, Suit)
-
-Rewrite the `card` function so that the tests still pass
-
+type Card = (Rank, Suit)
+\end{haskell}
+Rewrite the ~card~ function so that the tests still pass
+\vs
 Hint:
+\begin{haskell}
+card [r,s] = (charToRank c, charToSuit s)
 
-    card [r,s] = (charToRank c, charToSuit s)
-
-    charToRank 'A' = Ace
-    ...
- 
-\end{frame}
-\end{document}
+charToRank 'A' = Ace
+...
+\end{haskell}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Type Class = a way to define type conformity}
-
 Saying that
-
-    data Rank = Two | Three | Four | Five | Six | Seven | Eight 
-              | Nine | Ten | Jack | Queen | King | Ace
-        deriving (Eq, Ord, Enum, Show)
-
-means that values of type `Rank`
-
-\item  can be compared with `==` and `/=` 
-\item  can be compared with `compare`, `<`, `<=` ...
-\item  can be converted to and fron Int with `fromEnum` and `toEnum`
-\item  can be converted to String with `show`
-
-\end{frame}
-\end{document}
+\begin{haskell}
+data Rank = Two | Three | Four | Five | Six | Seven | Eight 
+          | Nine | Ten | Jack | Queen | King | Ace
+    deriving (Eq, Ord, Enum, Show)
+\end{haskell}
+means that values of type ~Rank~ 
+\begin{itemize}
+\item  can be compared with ~==~ and ~/=~ 
+\item  can be compared with ~compare~, ~<~, ~<=~ ...
+\item  can be converted to and fron Int with ~fromEnum~ and ~toEnum~
+\item  can be converted to String with ~show~
+\end{itemize}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Type Class = a way to define type conformity}
-
 Ghci:
+\begin{term}
+:load PokerHand.hs\rk
 
-    :load PokerHand.hs\rk
-
-    Two < Three\rk
-    Ace > King\rk
-    show "Queen"\rk
-    card "8d"\rk
-
+Two < Three\rk
+Ace > King\rk
+show "Queen"\rk
+card "8d"\rk
+\end{term}
 Better design:
-
-\item  the type `Card` can have only 52 values.
+\begin{itemize}
+\item  the type ~Card~ can have only 52 values.
 \item  once conversion is done, you can only
-
-	- compare by rank order (no illegal rank allowed)
-	- compare on equality by suit (no illegal suit allowed)
-
+\begin{itemize}
+\item compare by rank order (no illegal rank allowed)
+\item compare on equality by suit (no illegal suit allowed)
+\end{itemize}
+\end{itemize}
 \end{frame}
-\end{document}
-# Checkpoint #1 
-
-We have the proper types to describe our values
-
-We have our first feature: comparing cards
-
-#Well Done!!
-
-\end{frame}
-\end{document}
+\begin{frame}[fragile]
+\frametitle{Checkpoint \#1}
+\begin{center}
+We have the proper types to describe our values\\
+\vs
+We have our first feature: comparing cards\\
+\vs
+\Large{Well Done!!}
+\end{center}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Passing Functions to Functions}
-
 Ghci:
+\begin{term}
+import Data.Ord\rk
 
-    import Data.Ord\rk
+:type compare\rk
 
-    :type compare\rk
+:type comparing\rk
 
-    :type comparing\rk
+comparing abs (-4) 3\rk
 
-    comparing abs (-4) 3\rk
+:load PokerHand.hs\rk
 
-    :load PokerHand.hs\rk
-
-    comparing rank (card "8c") (card "5d")\rk
-
-the function `rank` is passed to the `comparing` function
-
-\end{frame}
-\end{document}
+comparing rank (card "8c") (card "5d")\rk
+\end{term}
+the function ~rank~ is passed to the ~comparing~ function
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Combining Functions}
-
 Ghci:
+\begin{term}
+:type (.)\rk
 
-    :type (.)\rk
+(length . words) "time flies like an arrow"\rk
 
-    (length . words) "time flies like an arrow"\rk
-
-    comparing (rank . card) "8c" "5d"\rk
-
-`(f . g) x == f (g x)` 
-
-\end{frame}
-\end{document}
+comparing (rank . card) "8c" "5d"\rk
+\end{term}
+~(f . g) x == f (g x)~ 
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Combining Functions}
-
-Refactor the test using `comparing` and the `. ` operator
-
-    describe "comparing card by rank" $ do
-        it "should follow the rules of poker" $ do
-            compare (rank (card "8d")) (rank (card "6h")) `shouldBe` GT
-            compare (rank (card "4d")) (rank (card "4h")) `shouldBe` EQ
-            compare (rank (card "9d")) (rank (card "Th")) `shouldBe` LT 
-            compare (rank (card "Td")) (rank (card "Jh")) `shouldBe` LT 
-            compare (rank (card "Jd")) (rank (card "Qh")) `shouldBe` LT 
-            compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
-            compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
-
-\end{frame}
-\end{document}
+Refactor the test using ~comparing~ and the ~. ~ operator
+\begin{hspec}
+describe "comparing card by rank" $ do
+    it "should follow the rules of poker" $ do
+        compare (rank (card "8d")) (rank (card "6h")) `shouldBe` GT
+        compare (rank (card "4d")) (rank (card "4h")) `shouldBe` EQ
+        compare (rank (card "9d")) (rank (card "Th")) `shouldBe` LT 
+        compare (rank (card "Td")) (rank (card "Jh")) `shouldBe` LT 
+        compare (rank (card "Jd")) (rank (card "Qh")) `shouldBe` LT 
+        compare (rank (card "Qd")) (rank (card "Kh")) `shouldBe` LT 
+        compare (rank (card "Kd")) (rank (card "Ah")) `shouldBe` LT 
+\end{hspec}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Mapping a function to a list of values}
-
 Ghci:
+\begin{term}
+:type map\rk
+map negate [-34,42,17]\rk
 
-    :type map\rk
-    map negate [-34,42,17]\rk
-
-    map sqrt [1,2,3,4,5]\rk
-
-\end{frame}
-\end{document}
+map sqrt [1,2,3,4,5]\rk
+\end{term}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Collecting Cards}
-
-Write the function `cards` such that
-
-    describe "cards" $ do
-        it "should collect cards from a string" $ do
-            cards "8d Ah Qc"  `shouldBe`
-                 [(Eight,Diamonds),(Ace,Hearts),(Queen,Clubs)]
-
-\end{frame}
-\end{document}
+Write the function ~cards~ such that
+\begin{hspec}
+describe "cards" $ do
+    it "should collect cards from a string" $ do
+        cards "8d Ah Qc"  `shouldBe`
+             [(Eight,Diamonds),(Ace,Hearts),(Queen,Clubs)]
+\end{hspec}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Sorting}
+\begin{term}
+sort [42,3,17,1,22,4,38]\rk
 
-    sort [42,3,17,1,22,4,38]\rk
+sortBy compare "HELLO"\rk
 
-    sortBy compare "HELLO"\rk
-
-    sortBy (comparing length) (words "time flies like an arrow")\rk
-
-
-\end{frame}
-\end{document}
+sortBy (comparing length) (words "time flies like an arrow")\rk
+\end{term}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Ranks of a hand}
-
 Write the function `ranks` such that
-
-    describe "ranks" $ do
-        it "should give the sorted ranks of a hand" $ do
-            ranks (cards "8d Ah Qc")  `shouldBe` [Ace, Queen, Eight]
-
-\end{frame}
-\end{document}
+\begin{hspec}
+describe "ranks" $ do
+    it "should give the sorted ranks of a hand" $ do
+        ranks (cards "8d Ah Qc")  `shouldBe` [Ace, Queen, Eight]
+\end{hspec}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Grouping}
-
-    group "HELLO"\rk
+\begin{term}
+group "HELLO"\rk
     
-    (group . sort) "Cats and Dogs"
-
-\end{frame}
-\end{document}
+(group . sort) "Cats and Dogs"\rk
+\end{term}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Groups of Cards}
-
 Write the function `groups` such that
+\begin{hspec}
+describe "groups" $ do
+    it "should group and sort the ranks of a hand" $ do
+        groups (cards "8d Ah Qc 8h 8s")  `shouldBe`
+             [[EIght,Eight,Eight],[Ace],[Queen]]
 
-    describe "groups" $ do
-        it "should group and sort the ranks of a hand" $ do
-            groups (cards "8d Ah Qc 8h 8s")  `shouldBe`
-                 [[EIght,Eight,Eight],[Ace],[Queen]]
-
-            groups (cards "8d Ah Qc 8h As")  `shouldBe`
-                 [[Ace,Ace][EIght,Eight],[Queen]]
-
+        groups (cards "8d Ah Qc 8h As")  `shouldBe`
+             [[Ace,Ace][EIght,Eight],[Queen]]
+\end{hspec}
 Hint: use
-\item  `sort`
-\item  `sortBy`
-\item  `comparing`
-\item  `group`
-\item  `reverse`
-
-\end{frame}
-\end{document}
+\begin{itemize}
+\item  ~sort~
+\item  ~sortBy~
+\item  ~comparing~
+\item  ~group~
+\item  ~reverse~
+\end{itemize}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Categorizing groups of Cards}
-
 A data type for Category
-
-    data Category = HighCard | OnePair | TwoPairs | ThreeOfAKind 
-                  | Straight | Flush | FullHouse | FourOfAKind 
-                  | StraightFlush | RoyalFlush
-        deriving (Eq,Ord,Show)
-
-\end{frame}
-\end{document}
+\begin{haskell}
+data Category = HighCard | OnePair | TwoPairs | ThreeOfAKind 
+              | Straight | Flush | FullHouse | FourOfAKind 
+              | StraightFlush | RoyalFlush
+    deriving (Eq,Ord,Show)
+\end{haskell}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Categorizing groups of Cards}
-
 Write the function
-
- `category :: [[Rank]] -> Category`
-
-    describe "category" $ do
-        it "should determine the category of a hand" $ do
-            let hs = ["4s 5d Kc Tc 3d"
-                     ,"4s Kd Kc Tc 3d"
-                     ,"4s Kd Kc Tc Td"
-                     ,"Ts Kd Kc Kc 8d"
-                     ,"Ts Kd Kc Tc Td"
-                     ,"Ts Kd Kc Kc Kd"]
-            map (category.groups.cards) hs ==  
-                    [HighCard, OnePair, TwoPairs
-                    ,ThreeOfAKind, FullHouse, FourOfAKind]
-
+ ~category :: [[Rank]] -> Category~
+\begin{hspec}
+describe "category" $ do
+    it "should determine the category of a hand" $ do
+        let hs = ["4s 5d Kc Tc 3d"
+                 ,"4s Kd Kc Tc 3d"
+                 ,"4s Kd Kc Tc Td"
+                 ,"Ts Kd Kc Kc 8d"
+                 ,"Ts Kd Kc Tc Td"
+                 ,"Ts Kd Kc Kc Kd"]
+        map (category.groups.cards) hs ==  
+                [HighCard, OnePair, TwoPairs
+                ,ThreeOfAKind, FullHouse, FourOfAKind]
+\end{hspec}
 Hint:
-
-    category [_,_,_,_,_]   = HighCard
-    category [[_,_],_,_,_] = OnePair
-    ...
-
-\end{frame}
-\end{document}
+\begin{haskell}
+category [_,_,_,_,_]   = HighCard
+category [[_,_],_,_,_] = OnePair
+...
+\end{haskell}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Special categories}
-
-A *Straight* is like a *HighCard* with ranks forming a sequence
-
-e.g. `Th 9d 8c 7s 6s`
-
-
-A *Flush* is like a *HighCard* with all cards of same suit
-
-e.g. `Kh Jh 9h 7h 6h`
-
-\end{frame}
-\end{document}
+A ~Straight~ is like a ~HighCard~ with ranks forming a sequence\\
+\vs
+e.g. ~Th 9d 8c 7s 6s~
+\vs
+A ~Flush~ is like a ~HighCard~ with all cards of same suit
+\vs
+e.g. ~Kh Jh 9h 7h 6h~
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Guards}
-
 Pattern matching can be applied with conditions, called guards
+\begin{haskell}
+power n m | m >= 0    = product (replicate m n)
+          | otherwise = error "negative exponent"   
 
-    power n m | m >= 0    = product (replicate m n)
-              | otherwise = error "negative exponent"   
-
-    sign n | n < 0 = -1
-           | n > 0 =  1
-           | _     =  0
-
-\end{frame}
-\end{document}
+sign n | n < 0 = -1
+       | n > 0 =  1
+       | _     =  0
+\end{haskell}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Detecting a Flush}
-
-Write the function `flush`:
-
-    describe "flush" $ do
-        it "should detect when all cards have the same suit" $ do
-            flush (cards "8d Ah 4d 3d Ad") `shouldBe` False
-            flush (cards "8h Ah 4h 3h Kh") `shouldBe` True
-
+Write the function ~flush~:
+\begin{hspec}
+describe "flush" $ do
+    it "should detect when all cards have the same suit" $ do
+        flush (cards "8d Ah 4d 3d Ad") `shouldBe` False
+        flush (cards "8h Ah 4h 3h Kh") `shouldBe` True
+\end{hspec}
 Hint: use
-\item  `group`
-\item  `length`
+\begin{itemize}
+\item  ~group~
+\item  ~length~
 \item  pattern matching with guards
-
-\end{frame}
-\end{document}
+\end{itemize}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{The Enum Type Class}
-
 Ghci:
+\begin{term}
+fromEnum False\rk
+fromEnum True\rk
 
-    fromEnum False\rk
-    fromEnum True\rk
+:load PokerHand.hs\rk
 
-    :load PokerHand.hs\rk
-
-    fromEnum Ace\rk
-    fromEnum King\rk
-
-\end{frame}
-\end{document}
+fromEnum Ace\rk
+fromEnum King\rk
+\end{term}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Detecting a Straight}
-
 Method:
+\begin{itemize}
 \item  Given a list of 5 distinct groups of 1 rank each, 
 \item  And   the first rank value = the last rank value + 4
 \item  Then  the category is Straight
-
-
-    isStraight [[a],_,_,_,[b]] = fromEnum a == 4 + fromEnum b 
-    isStraight _               = False 
-
-\end{frame}
-\end{document}
+\end{itemize}
+\begin{haskell}
+isStraight [[a],_,_,_,[b]] = fromEnum a == 4 + fromEnum b 
+isStraight _               = False 
+\end{haskell}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Lexicographic Order}
-
 Tuples, like Lists can be compared according to lexicographic order:
-
- `(a,b) < (c,d) ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
-
-
- `[a,b] < [c,d] ≡ (a<c) ⋁ (a=c) ⋀ (b<d)`
-
+\begin{center}
+$(a,b) < (c,d) \equiv (a<c) \vee (a=c) \wedge (b<d)$\\
+\vs
+$[a,b] < [c,d] \equiv (a<c) \vee (a=c) \wedge (b<d)$
+\end{center}
 This allows for comparing hand by category then ranks:
+\begin{itemize}
 \item  If two hands have the same category, the winner is the hand with the highest rank in the category.
 \item  If two hands have the same category and rank, the winner is the hand with the highest remaining cards. 
-
+\end{itemize}
 \end{frame}
-\end{document}
-#\end{frame}
 \begin{frame}[fragile]
 \frametitle{Comparing two hands}
+Comparing two hands involves comparing their category, and if their categories are equal, comparing the ranks in the order given by the groups.\\
+\vs
+Creating values of type ~Ranking~ allows for such comparisons, provided that the ranks are sorted in reverse order.
+\begin{haskell}
+type Ranking = (Category, [Ranks])
 
-Comparing two hands involves comparing their category, and if their categories are equal, comparing the ranks in the order given by the groups.
-
-Creating values of type `Ranking` allows for such comparisons, provided that the ranks are sorted in reverse order.
-
-    type Ranking = (Category, [Ranks])
-
-    it "should correctly compare two ranking values" $ do 
-        (OnePair,[Ace,Ace,Ten,Eight,Five]) 
-            > (OnePair, [Ace,Ace,Eight,Seven,Two])
-             `shouldBe` True
-
-\end{frame}
-\end{document}
+it "should correctly compare two ranking values" $ do 
+    (OnePair,[Ace,Ace,Ten,Eight,Five]) 
+        > (OnePair, [Ace,Ace,Eight,Seven,Two])
+         `shouldBe` True
+\end{haskell}
+%stopzone
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Determining a Ranking}
+Create the function:\\
+~ranking :: [Cards] -> Ranking~
+\begin{hspec}
+it "should keep the ranking of a hand" $ do
+    ranking (cards "2c 2s 3s 3c 4h")
+        `shouldBe` (TwoPairs, [Three,Three,Two,Two,Four])
 
-Create the function:
-
-`ranking :: [Cards] -> Ranking`
-
-    it "should keep the ranking of a hand" $ do
-        ranking (cards "2c 2s 3s 3c 4h")
-            `shouldBe` (TwoPairs, [Three,Three,Two,Two,Four])
-
-        ranking (cards "2c 2s As 3c 4h")
-            `shouldBe` (OnePair, [Two,Two,Ace,Four,Three])
-
+    ranking (cards "2c 2s As 3c 4h")
+        `shouldBe` (OnePair, [Two,Two,Ace,Four,Three])
+\end{hspec}
+%stopzone
 Hint:
-
-    ranking cs = (cat,rs)
-    where
-        cat = category gs
-        rs  = concat gs
-        gs  =  ...
-
-\end{frame}
-\end{document}
+\begin{haskell}
+ranking cs = (cat,rs)
+where
+    cat = category gs
+    rs  = concat gs
+    gs  =  ...
+\end{haskell}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Special Categories (cont.)}
-
-A *Straight Flush* is a *Straight* and a *Flush*
-
-e.g `Th 9h 8h 7h 6h`
-
-A *Royal Flush* is a *Straight Flush* starting with an Ace
-
-e.g. `Ah Kh Qh Jh Th`
-
-
-\end{frame}
-\end{document}
+A \emph{Straight Flush} is a \emph{Straight} and a \emph{Flush} \\
+\vs
+e.g \texttt{Th 9h 8h 7h 6h}\\
+\vs
+A \emph{Royal Flush} is a \emph{Straight Flush} starting with an Ace\\
+\vs
+e.g. \texttt{Ah Kh Qh Jh Th}\\
+\vs
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Promoting to special categories}
+\begin{haskell}
+promote :: Ranking -> Ranking
+promote (HighCard,[Ace,Five,_,_,_]) = (Straight,
+                                      [Five,Four,Three,Two,Ace])
+promote (HighCard,rs) | isStraight rs = (Straight, rs)
+promote r = r
 
-    promote :: Ranking -> Ranking
-    promote (HighCard,[Ace,Five,_,_,_]) = (Straight,
-                                          [Five,Four,Three,Two,Ace])
-    promote (HighCard,rs) | isStraight rs = (Straight, rs)
-    promote r = r
-
-    flushes :: Ranking -> Bool -> Ranking
-    flushes True (HighCard,rs) = (Flush, rs)
-    flushes True (Straight,[Ace,_,_,_,_] = (RoyalFlush,
-                                            [Ace,King,Queen,Jack,Ten])
-    flushes True (Straight,rs) = (StraightFlush rs)
-    flushes False r = r
-
-
-\end{frame}
-\end{document}
+flushes :: Ranking -> Bool -> Ranking
+flushes True (HighCard,rs) = (Flush, rs)
+flushes True (Straight,[Ace,_,_,_,_] = (RoyalFlush,
+                                        [Ace,King,Queen,Jack,Ten])
+flushes True (Straight,rs) = (StraightFlush rs)
+flushes False r = r
+\end{haskell}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Ranking Final Test}
-
-
-        it "should correctly order a list by ranking" $ do
-            let s = ["7s 5c 4d 3d 2c" ,"As Kc Qd Jd 9c"
-                    ,"2h 2d 5c 4c 3c" ,"Ah Ad Kc Qc Jc"
-                    ,"2c 2s 3s 3c 4h" ,"Ac As Ks Kc Jh"
-                    ,"2h 2d 2c 4c 3c" ,"Ah Ad Ac Qc Jc"
-                    ,"5h 4s 3d 2c Ah" ,"Ah Ks Qd Jc Th"
-                    ,"7c 5c 4c 3c 2c" ,"Ac Kc Qc Jc 9c"
-                    ,"2h 2d 2c 3h 3c" ,"Ah Ad Ac Kh Kc"
-                    ,"2c 2s 2h 2d 3c" ,"Ac As Ah Ad Jc"
-                    ,"5c 4c 3c 2c Ac" ,"Ah Kh Qh Jh Th"]
-                isOrdered [_] = True
-                isOrdered (x:y:xs) = x < y && isOrdered (y:xs) 
-                r = map (ranking.cards) s
-            isOrdered r `shouldBe` True
-
+\begin{hspec}
+it "should correctly order a list by ranking" $ do
+    let s = ["7s 5c 4d 3d 2c" ,"As Kc Qd Jd 9c"
+            ,"2h 2d 5c 4c 3c" ,"Ah Ad Kc Qc Jc"
+            ,"2c 2s 3s 3c 4h" ,"Ac As Ks Kc Jh"
+            ,"2h 2d 2c 4c 3c" ,"Ah Ad Ac Qc Jc"
+            ,"5h 4s 3d 2c Ah" ,"Ah Ks Qd Jc Th"
+            ,"7c 5c 4c 3c 2c" ,"Ac Kc Qc Jc 9c"
+            ,"2h 2d 2c 3h 3c" ,"Ah Ad Ac Kh Kc"
+            ,"2c 2s 2h 2d 3c" ,"Ac As Ah Ad Jc"
+            ,"5c 4c 3c 2c Ac" ,"Ah Kh Qh Jh Th"]
+        isOrdered [_] = True
+        isOrdered (x:y:xs) = x < y && isOrdered (y:xs) 
+        r = map (ranking.cards) s
+    isOrdered r `shouldBe` True
+\end{hspec}
+%stopzone
+\end{frame}
+\begin{frame}[fragile]
+\frametitle{Ranking Final Test}
 Hint:
-    
-    ranking cs = flushes (isFlush cs) (promote (cat, rs))
-    where
-    cat = gategory gs
-    rs  = concat   gs
-    gs  = groups (ranks cs)
-
+\begin{haskell}
+ranking cs = flushes (isFlush cs) (promote (cat, rs))
+where
+cat = category gs
+rs  = concat   gs
+gs  = groups (ranks cs)
+\end{haskell}
+\end{frame}
+\begin{frame}
+\frametitle{Checkpoint \#2}
+\begin{center}
+We can compare two hands in Texas Hold'em\\
+\vs
+\Large{Well Done!!}
+\end{center}
 \end{frame}
 \end{document}
-# Checkpoint #2
-
-We can compare two hands in Texas Hold'em
-
-#Well Done!!

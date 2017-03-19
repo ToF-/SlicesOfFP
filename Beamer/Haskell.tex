@@ -1,0 +1,147 @@
+% lstset for Haskell in Texashold'em
+\newcommand{\return}{\enskip$\hookleftarrow$}
+
+\lstdefinestyle{mykeywords}
+{ morekeywords={subsequences, comparing},
+  deletekeywords=[1]{True, False, Bool, String, Char, Int, Integer, Float, Double, LT, GT, EQ},
+  keywords=[2]{True, False, LT, GT, EQ, Ace, King, Queen, Jack, Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two, HighCard,OnePair,TwoPairs,ThreeOfAKind,FullHouse,Straight,Flush,StraightFlush,FourOfAKind,RoyalFlush, Hearts, Spades, Diamonds, Clubs},
+  keywords=[3]{Bool, Int, String, Char, Integer, Float, Double, Vector, Flour, Milk, Egg, Batter, Pancake, Suit, Card, Value, Rank, Category, Hand, Ranking, Entry, Display, Score}}
+
+\lstset{classoffset=0,
+    language=Haskell,
+	basicstyle=\color{black}\ttfamily\small,
+    columns=fullflexible,
+    keepspaces=true,
+    tabsize=4,
+	tab=$\to$,
+    literate={==}{$=\joinrel=$}3 {.o.}{$\circ$}2 {->}{$\to$ }2 {=>}{$\Longrightarrow$}1 {lll}{$\lambda$}1 {[]}{[\thinspace]\thinspace}1 {__}{\space}1 
+    {♣}{\large{\color{black}{\monoclubs}}}1 {♦}{\large{\color{red}{\monodiamonds}}}1 {♥}{\large{\color{red}{\monohearts}}}1 {♠}{\large{\color{black}{\monospades}}}1 , 
+    style=mykeywords,    
+	numberstyle=\tiny,
+	float=tbph,
+	extendedchars,
+	breaklines,
+	frame=none,
+	showtabs=false,
+	showspaces=false,
+	showstringspaces=false,
+	keywordstyle=\color{NavyBlue},
+    keywordstyle=[2]\color{Green},
+    keywordstyle=[3]\color{blue},
+	identifierstyle=\color{black},
+	stringstyle=\color{RoyalPurple},
+	commentstyle=\color{darkgray},
+	captionpos=b,
+	aboveskip=\smallskipamount,
+    belowskip=\smallskipamount}
+
+\lstnewenvironment{haskell}[1][]
+{\lstset{classoffset=0,
+    language=Haskell,
+	basicstyle=\color{black}\ttfamily\small,
+    columns=fullflexible,
+    keepspaces=true,
+    tabsize=4,
+	tab=$\to$,
+	literate={==}{$=\joinrel=$}3 {.o.}{$\circ$}2 {->}{$\to$ }2 {=>}{$\Longrightarrow$}1 {lll}{$\lambda$}1 {[]}{[\thinspace]}3 {__}{\space}1 
+    {♣}{\large{\color{black}{\monoclubs}}}1 {♦}{\large{\color{red}{\monodiamonds}}}1 {♥}{\large{\color{red}{\monohearts}}}1 {♠}{\large{\color{black}{\monospades}}}1 , 
+	numberstyle=\tiny,
+	extendedchars,
+	breaklines,
+	frame=single,
+	showtabs=false,
+	showspaces=false,
+	showstringspaces=false,
+	keywordstyle=\color{NavyBlue},
+    deletekeywords=[1]{True, False, Bool, String, Char, Int, Integer, Float, Double, LT, GT, EQ},
+    keywordstyle=[2]\color{Green},
+    keywordstyle=[3]\color{blue},
+	identifierstyle=\color{black},
+    morekeywords={subsequences, comparing},
+    keywords=[2]{EQ, LT, GT, True, False, Ace, King, Queen, Jack, Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two, HighCard,OnePair,TwoPairs,ThreeOfAKind,FullHouse,Straight,Flush,StraightFlush,FourOfAKind,RoyalFlush, Hearts, Spades, Diamonds, Clubs},
+    keywords=[3]{Bool, Int, String, Char, Integer, Float, Double, Vector, Flour, Milk, Egg, Batter, Pancake, Suit, Card, Value, Rank, Category, Hand, Ranking, Entry, Display, Score},
+	stringstyle=\color{RoyalPurple},
+	commentstyle=\color{darkgray},
+	captionpos=b,
+	aboveskip=\smallskipamount,
+    belowskip=\smallskipamount,
+#1}}{}
+
+\definecolor{teagreen}{rgb}{0.82, 0.94, 0.75}
+\definecolor{seashell}{rgb}{1.0, 0.96, 0.93}
+\definecolor{honeydew}{rgb}{0.94, 1.0, 0.94}
+\lstnewenvironment{hspec}[1][]
+{\lstset{classoffset=0,
+    language=Haskell,
+	basicstyle=\color{black}\ttfamily\small,
+    rulecolor=\color{Green},
+    frame=leftline,
+	columns=flexible,
+	tabsize=4,
+	tab=$\to$,
+	literate={==}{$=\joinrel=$}3 {.o.}{$\circ$}2 {->}{$\to$ }2 {=>}{$\Longrightarrow$}1 {lll}{$\lambda$}1 {[]}{[ ]}2 {__}{\space}1 
+    {♣}{\large{\color{black}{\monoclubs}}}1 {♦}{\large{\color{red}{\monodiamonds}}}1 {♥}{\large{\color{red}{\monohearts}}}1 {♠}{\large{\color{black}{\monospades}}}1 , 
+	numberstyle=\tiny,
+	extendedchars,
+	breaklines,
+	showtabs=false,
+	showspaces=false,
+	showstringspaces=false,
+	keywordstyle=\color{NavyBlue},
+    deletekeywords=[1]{True, False, Bool, String, Int, Integer, Float, Double, LT, GT, EQ},
+    keywordstyle=[2]\color{Green},
+    keywordstyle=[3]\color{blue},
+	identifierstyle=\color{black},
+    morekeywords={subsequences, comparing, shouldBe, it, describe},
+    keywords=[2]{EQ, LT, GT, True, False, Ace, King, Queen, Jack, Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two, HighCard,OnePair,TwoPairs,ThreeOfAKind,FullHouse,Straight,Flush,StraightFlush,FourOfAKind,RoyalFlush, Hearts, Spades, Diamonds, Clubs},
+    keywords=[3]{Bool, Int, String, Char, Integer, Float, Double, Vector, Flour, Milk, Egg, Batter, Pancake,Suit, Card, Value, Rank, Category, Hand, Ranking, Entry, Display, Score},
+	stringstyle=\color{RoyalPurple},
+	commentstyle=\color{darkgray},
+	captionpos=b,
+	aboveskip=\smallskipamount,
+    belowskip=\smallskipamount,
+#1}}{}
+\definecolor{ghcicolor}{rgb}{0.98, 0.98, 0.98}
+\lstnewenvironment{ghci}[1][]
+{\lstset{classoffset=0,
+    language=Haskell,
+	basicstyle=\color{black}\ttfamily\small,
+    backgroundcolor=\color{ghcicolor},
+    rulecolor=\color{blue},
+	columns=flexible,
+	tabsize=4,
+	tab=$\to$,
+    literate={==}{$=\joinrel=$}3 {.A.}{{\color{gray} }}1 {.Q.}{{\color{gray}\return}}2 {.o.}{$\circ$}2 {->}{$\to$ }2 {=>}{$\Longrightarrow$}1 {lll}{$\lambda$}1 {[]}{[ ]}2 {__}{\space}1 
+    {♣}{\large{\color{black}{\monoclubs}}}1 {♦}{\large{\color{red}{\monodiamonds}}}1 {♥}{\large{\color{red}{\monohearts}}}1 {♠}{\large{\color{black}{\monospades}}}1 , 
+	numberstyle=\tiny,
+	extendedchars,
+	breaklines,
+	frame=single,
+	showtabs=false,
+	showspaces=false,
+	showstringspaces=false,
+	keywordstyle=\color{NavyBlue},
+    deletekeywords=[1]{True, False, Bool, String, Char, Int, Integer, Float, Double, LT, GT, EQ},
+    keywordstyle=[2]\color{NavyBlue},
+    keywordstyle=[3]\color{NavyBlue},
+	identifierstyle=\color{NavyBlue},
+    morekeywords={subsequences, comparing},
+    keywords=[2]{C, H, EQ, LT, GT, True, False, Ace, King, Queen, Jack, Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two, HighCard,OnePair,TwoPairs,ThreeOfAKind,FullHouse,Straight,Flush,StraightFlush,FourOfAKind,RoyalFlush, Hearts, Spades, Diamonds, Clubs},
+    keywords=[3]{Bool, String, Char, Int, Integer, Float, Double, Vector, Flour, Milk, Egg, Batter, Pancake,Suit, Card, Value, Rank, Category, Hand, Ranking, Entry, Display, Score},
+	stringstyle=\color{NavyBlue},
+	commentstyle=\color{darkgray},
+	captionpos=b,
+	aboveskip=\smallskipamount,
+    belowskip=\smallskipamount,
+#1}}{}
+\definecolor{lightgray}{rgb}{0.83, 0.83, 0.83}
+
+\newcommand{\tsuccess}{\textcolor{Green}}
+\newcommand{\terror}{\textcolor{orange}}
+\newcommand{\tfailure}{\textcolor{red}}
+\newcommand{\tblack}{\textcolor{black}}
+
+\DefineVerbatimEnvironment%
+    {term}{Verbatim}
+    {frame=single, fontsize=\footnotesize, commandchars=\\\{\}}
+

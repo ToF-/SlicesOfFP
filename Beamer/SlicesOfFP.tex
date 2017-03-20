@@ -1,4 +1,6 @@
-\documentclass[12pt,xcolor={dvipsnames}]{beamer}
+\documentclass[11pt,xcolor={dvipsnames}]{beamer}
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
 \usepackage{listings}
 \usepackage{verbatim}
 \usepackage{fancyvrb}
@@ -16,7 +18,14 @@
 \newcommand{\rk}{\enskip{\key{$\hookleftarrow$}}}
 \newcommand{\vs}{\vspace{1em}}
 \input{Haskell.tex}
+\setbeamertemplate{footline}[frame number]
 \begin{document}
+\title{Slices of Functional Programming}
+\subtitle{The Texas Hold'em Kata}
+\author{Xavier Detant \& Christophe Thibaut}
+\begin{frame}
+\titlepage
+\end{frame}
 \begin{frame}[fragile]
 \frametitle{The Texas Hold'em Kata}
 given this file: \texttt{input.txt} :
@@ -84,7 +93,7 @@ Data.List.insert 42 [1,32,87]\rk
 \frametitle{Writing a test}
 
 A short program named \texttt{Specs.hs}:
-\begin{haskell}[frame=single]
+\begin{haskell}[frame=single,caption=Specs.hs]
 import Test.Hspec
 
 main = hspec 
@@ -126,9 +135,9 @@ Write a function \emph{response} that passes this test:
 \begin{hspec}
 import Test.Hspec
 
-main = hspec \$ do
+main = hspec $ do
     describe "response" $ do
-        it "should be a yes or a no" \$ do
+        it "should be a yes or a no" $ do
             response 'N' `shouldBe` False
             response 'n' `shouldBe` False
             response 'Y' `shouldBe` True
@@ -155,13 +164,14 @@ import Test.Hspec
 
 main = hspec $ do
     describe "label" $ do
-        it "should be a yes or a no" $ do
-            label "WO" = "Wool"
-            label "CO" = "Cotton"
-            label "PA" = "Nylon"
-            label "PC" = "Acrylic"
-            label "XX" = "--- unknown label ---"
-            label "YY" = "--- unknown label ---"
+        it "should be an english label" $ do
+            label "WO" `shouldBe` "Wool"
+            label "CO" `shouldBe` "Cotton"
+            label "PA" `shouldBe` "Nylon"
+            label "PC" `shouldBe` "Acrylic"
+            label "XX" `shouldBe` "--- unknown label ---"
+            label "YY" `shouldBe` "--- unknown label ---"
+import Test.Hspec
 \end{hspec}
 %stopzone
 \end{frame}
@@ -471,6 +481,21 @@ We have our first feature: comparing cards\\
 \end{center}
 \end{frame}
 \begin{frame}[fragile]
+\frametitle{Organizing Code in Modules}
+Let's move the production code into its own \emph{module}:
+\begin{haskell}[caption=PokerHand.hs]
+module PokerHand
+where
+. . .
+\end{haskell}
+and use it in the Specs script:
+\begin{hspec}
+import Test.Hspec
+import PokerHand
+. . .
+\end{hspec}
+\end{frame}
+\begin{frame}[fragile]
 \frametitle{Passing Functions to Functions}
 Ghci:
 \begin{term}
@@ -503,7 +528,7 @@ comparing (rank . card) "8c" "5d"\rk
 \begin{frame}[fragile]
 \frametitle{Combining Functions}
 Refactor the test using ~comparing~ and the ~. ~ operator
-\begin{hspec}
+\begin{hspec}[basicstyle=\color{black}\ttfamily\small]
 describe "comparing card by rank" $ do
     it "should follow the rules of poker" $ do
         compare (rank (card "8d")) (rank (card "6h")) `shouldBe` GT
@@ -569,10 +594,10 @@ Write the function `groups` such that
 describe "groups" $ do
     it "should group and sort the ranks of a hand" $ do
         groups (cards "8d Ah Qc 8h 8s")  `shouldBe`
-             [[EIght,Eight,Eight],[Ace],[Queen]]
+             [[Eight,Eight,Eight],[Ace],[Queen]]
 
         groups (cards "8d Ah Qc 8h As")  `shouldBe`
-             [[Ace,Ace][EIght,Eight],[Queen]]
+             [[Ace,Ace],[Eight,Eight],[Queen]]
 \end{hspec}
 Hint: use
 \begin{itemize}
@@ -641,12 +666,12 @@ sign n | n < 0 = -1
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Detecting a Flush}
-Write the function ~flush~:
+Write the function ~isFlush~:
 \begin{hspec}
-describe "flush" $ do
+describe "isFlush" $ do
     it "should detect when all cards have the same suit" $ do
-        flush (cards "8d Ah 4d 3d Ad") `shouldBe` False
-        flush (cards "8h Ah 4h 3h Kh") `shouldBe` True
+        isFlush (cards "8d Ah 4d 3d Ad") `shouldBe` False
+        isFlush (cards "8h Ah 4h 3h Kh") `shouldBe` True
 \end{hspec}
 Hint: use
 \begin{itemize}
@@ -677,7 +702,8 @@ Method:
 \item  Then  the category is Straight
 \end{itemize}
 \begin{haskell}
-isStraight [[a],_,_,_,[b]] = fromEnum a == 4 + fromEnum b 
+isStraight :: [Rank] -> Bool
+isStraight [a,_,_,_,b] = fromEnum a == 4 + fromEnum b 
 isStraight _               = False 
 \end{haskell}
 \end{frame}
@@ -701,19 +727,22 @@ Comparing two hands involves comparing their category, and if their categories a
 \vs
 Creating values of type ~Ranking~ allows for such comparisons, provided that the ranks are sorted in reverse order.
 \begin{haskell}
-type Ranking = (Category, [Ranks])
+type Ranking = (Category, [Rank])
 
-it "should correctly compare two ranking values" $ do 
-    (OnePair,[Ace,Ace,Ten,Eight,Five]) 
-        > (OnePair, [Ace,Ace,Eight,Seven,Two])
-         `shouldBe` True
+describe "Ranking" $ do
+    it "should correctly compare two ranking values" $ do 
+        (OnePair,[Ace,Ace,Ten,Eight,Five]) 
+            > (OnePair, [Ace,Ace,Eight,Seven,Two])
+             `shouldBe` True
 \end{haskell}
 %stopzone
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Determining a Ranking}
-Create the function:\\
-~ranking :: [Cards] -> Ranking~
+Create the function:
+\begin{haskell}[frame=none]
+ranking :: [Cards] -> Ranking
+\end{haskell}
 \begin{hspec}
 it "should keep the ranking of a hand" $ do
     ranking (cards "2c 2s 3s 3c 4h")
@@ -752,11 +781,11 @@ promote (HighCard,[Ace,Five,_,_,_]) = (Straight,
 promote (HighCard,rs) | isStraight rs = (Straight, rs)
 promote r = r
 
-flushes :: Ranking -> Bool -> Ranking
+flushes :: Bool -> Ranking -> Ranking
 flushes True (HighCard,rs) = (Flush, rs)
-flushes True (Straight,[Ace,_,_,_,_] = (RoyalFlush,
+flushes True (Straight,[Ace,_,_,_,_]) = (RoyalFlush,
                                         [Ace,King,Queen,Jack,Ten])
-flushes True (Straight,rs) = (StraightFlush rs)
+flushes True (Straight,rs) = (StraightFlush, rs)
 flushes False r = r
 \end{haskell}
 \end{frame}

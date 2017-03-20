@@ -1,5 +1,34 @@
+tour de table
+-> trouvez vous un binôme qui connaît haskell
+-> protocole : quand votre test passe: soufflez dans le wazoo
+-> bingo sheet : les mots qu'on présentera dans ghci 
 cabal install hspec
+routine pour checker: le premier snippet est un test qui passe
 tour de table ?
 signal "j'ai fini"
 slide 9 typo
 div slide 12
+introduction de digitToInt à faire (ils sont vraiment trop feignant :) ) : ghci digitToInt
+slide 18 : typo
+slide 23, rendu de la flèche (\rightarrow)
+donner les solutions pour aider ceux qui sont en retard
+Comment faire pour avoir plus de feedback quand ils sont mous comme ça ? -> faire du kata un jeu (avec les signaux/drapeaux), et offrir un prix au binôme gagnant ? J'achète :)
+
+retyper des fonctions = la cata
+  rank a d'abord le type: String -> Int, puis le type Card -> Int et ça fout la grouille tout le monde est perdu. 
+solution: 
+annoncer la couleur: ces fonctions vont casser, gardez vos tests.
+:load PokerHand avant checkpoint 1
+trouver un moyen de délivrer les snippets au compte goute (git ? )
+faire en live les sessions ghci
+
+snippets: la solution dans le snippet importe les tests
+garder tests et code ensemble, splitter avant le checkpoint parce qu'on veut tester le code de prod dans ghci
+
+slide 27: /"Queen"/Queen
+
+
+
+
+
+

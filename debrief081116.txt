@@ -22,7 +22,7 @@ pour améliorer:
 - intégrer digitToInt
 - planifier sur une plus longue: le dernier km ensemble 
 - remplacement de String par (Rank,Suit) et ce qu'il advient des fonctions rank et suit 
-- la fonction card devrait être présente dès le début : on ne casse pas les tests
+* - la fonction card devrait être présente dès le début : on ne casse pas les tests
 - certains participants anticipent toEnum au lieu de 10 patterns. 
 - introduire les type class plus naturellement
 - outside in ou bottom up?

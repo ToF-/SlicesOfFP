@@ -1,0 +1,5 @@
+cabal install hspec
+tour de table ?
+signal "j'ai fini"
+slide 9 typo
+div slide 12

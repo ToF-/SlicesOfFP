@@ -1,2 +1,0 @@
-main = putStrLn "hello, world!"
-

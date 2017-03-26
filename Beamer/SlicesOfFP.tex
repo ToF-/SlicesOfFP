@@ -97,14 +97,7 @@ Data.List.insert 42 [1,32,87]\rk
 \frametitle{Writing a test}
 
 A short program named \texttt{Specs.hs}:
-\begin{haskell}[frame=single,caption=Specs.hs]
-import Test.Hspec
-
-main = hspec 
-(describe "a test" 
- (it "should pass" 
-  (2+2  `shouldBe` 4)))
-\end{haskell}
+\lstinputlisting[style=haskell,firstline=2]{../code/005.hs}
 \vs
 Running the test:
 \begin{term}
@@ -114,17 +107,7 @@ runhaskell Specs.hs\rk
 \begin{frame}[fragile]
 \frametitle{Writing a suite of tests}
 Sequencing actions with ~do~:
-\begin{haskell}
-
-import Test.Hspec
-
-main = hspec $ do
-    describe "a suite" $ do
-        it "should pass" $ do
-            2+2  `shouldBe` 4
-        it "should not fail" $ do
-            2*2 `shouldBe` 4
-\end{haskell}
+\lstinputlisting[style=haskell,firstline=2]{../code/006.hs}
 \begin{itemize}
 \item the ~\$~ operator is an alternative to parentheses:
 \item ~f \$ x y z~ $\equiv$ ~f (x y z)~
@@ -136,17 +119,7 @@ main = hspec $ do
 \begin{frame}[fragile]
 \frametitle{Let's write some functions}
 Write a function \emph{response} that passes this test:
-\begin{hspec}
-import Test.Hspec
-
-main = hspec $ do
-    describe "response" $ do
-        it "should be a yes or a no" $ do
-            response 'N' `shouldBe` False
-            response 'n' `shouldBe` False
-            response 'Y' `shouldBe` True
-            response 'y' `shouldBe` True
-\end{hspec}
+\lstinputlisting[style=hspec,firstline=2]{../code/007.hs}
 %stopzone
 \end{frame}
 \begin{frame}[fragile]

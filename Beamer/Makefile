@@ -1,2 +1,2 @@
-SlicesOfFp : SlicesOfFp.tex
-	pdflatex SlicesOfFp.tex
+SlicesOfFp : SlicesOfFP.tex
+	pdflatex SlicesOfFP.tex

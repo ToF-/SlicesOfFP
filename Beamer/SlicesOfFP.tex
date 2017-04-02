@@ -541,11 +541,19 @@ describe "cards" $ do
 \begin{frame}[fragile]
 \frametitle{Sorting}
 \begin{term}
+import Data.List\rk
+
 sort [42,3,17,1,22,4,38]\rk
 
 sortBy compare "HELLO"\rk
 
 sortBy (comparing length) (words "time flies like an arrow")\rk
+
+:type flip\rk
+
+flip compare 4 5\rk
+
+sortBy (flip compare) "HELLO"\rk
 \end{term}
 \end{frame}
 \begin{frame}[fragile]
@@ -599,7 +607,7 @@ data Category = HighCard | OnePair | TwoPairs | ThreeOfAKind
 \begin{frame}[fragile]
 \frametitle{Categorizing groups of Cards}
 Write the function
- ~category :: [[Rank]] -> Category~
+ ~category :: [[Rank]] $\rightarrow$ Category~
 \begin{hspec}
 describe "category" $ do
     it "should determine the category of a hand" $ do

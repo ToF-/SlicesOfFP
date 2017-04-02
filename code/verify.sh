@@ -12,19 +12,11 @@ do
         fi
         if [ -e $solutionFile ]
         then
-cat <<EOF | cat - imports.hs $file $solutionFile | runhaskell || exit 2
-import Data.Char
-import Data.List
-import Data.Ord
-EOF
+        cat imports.hs $file $solutionFile | runhaskell || exit 2
         else
             runhaskell $file || exit 1
         fi
     fi
 done
 
-cat <<EOF | cat - 032.solution.hs 023.solution.hs | runhaskell || exit 2
-import Data.Char
-import Data.List
-import Data.Ord
-EOF
+cat imports.hs 032.solution.hs 023.solution.hs | runhaskell || exit 2

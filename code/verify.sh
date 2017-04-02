@@ -8,7 +8,7 @@ do
         solutionFile=${file%.*}.solution.hs
         if [ -e $solutionFile ]
         then
-cat <<EOF | cat - $file $solutionFile | runhaskell || exit 2
+cat <<EOF | cat - imports.hs $file $solutionFile | runhaskell || exit 2
 import Data.Char
 EOF
         else

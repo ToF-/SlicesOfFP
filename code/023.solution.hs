@@ -1,4 +1,4 @@
--- 024.hs
+-- 023.hs
 type Card = (Rank, Suit) 
 type Rank = Int
 type Suit = Char

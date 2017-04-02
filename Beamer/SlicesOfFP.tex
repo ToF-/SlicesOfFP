@@ -388,6 +388,22 @@ But:
 \end{itemize}
 \end{frame}
 \begin{frame}[fragile]
+\frametitle{Type Class = a way to define type conformity}
+Saying that
+\begin{haskell}
+data Rank = Two | Three | Four | Five | Six | Seven | Eight 
+          | Nine | Ten | Jack | Queen | King | Ace
+    deriving (Eq, Ord, Enum, Show)
+\end{haskell}
+means that values of type ~Rank~ 
+\begin{itemize}
+\item  can be compared with ~==~ and ~/=~ 
+\item  can be compared with ~compare~, ~$<$~, ~$<$=~ ...
+\item  can be converted to and fron Int with ~fromEnum~ and ~toEnum~
+\item  can be converted to String with ~show~
+\end{itemize}
+\end{frame}
+\begin{frame}[fragile]
 \frametitle{Types = a way to think about a problem}
 Let's create new types:
 \begin{haskell}
@@ -406,25 +422,10 @@ Hint:
 \begin{haskell}
 card [r,s] = (charToRank c, charToSuit s)
 
-charToRank 'A' = Ace
+charToRank 'A' = toEnum 12
+charToRank 'K' = toEnum 11
 ...
 \end{haskell}
-\end{frame}
-\begin{frame}[fragile]
-\frametitle{Type Class = a way to define type conformity}
-Saying that
-\begin{haskell}
-data Rank = Two | Three | Four | Five | Six | Seven | Eight 
-          | Nine | Ten | Jack | Queen | King | Ace
-    deriving (Eq, Ord, Enum, Show)
-\end{haskell}
-means that values of type ~Rank~ 
-\begin{itemize}
-\item  can be compared with ~==~ and ~/=~ 
-\item  can be compared with ~compare~, ~<~, ~<=~ ...
-\item  can be converted to and fron Int with ~fromEnum~ and ~toEnum~
-\item  can be converted to String with ~show~
-\end{itemize}
 \end{frame}
 \begin{frame}[fragile]
 \frametitle{Type Class = a way to define type conformity}

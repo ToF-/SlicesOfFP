@@ -5,7 +5,7 @@ promote (HighCard,[Ace,Five,_,_,_]) = (Straight,
 promote (HighCard,rs) | isStraight rs = (Straight, rs)
 promote r = r
 
-flushes :: Ranking -> Bool -> Ranking
+flushes :: Bool -> Ranking -> Ranking
 flushes True (HighCard,rs) = (Flush, rs)
 flushes True (Straight,[Ace,_,_,_,_]) = (RoyalFlush, [Ace,King,Queen,Jack,Ten])
 flushes True (Straight,rs) = (StraightFlush rs)

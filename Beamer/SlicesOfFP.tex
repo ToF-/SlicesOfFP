@@ -126,7 +126,11 @@ Sequencing actions with ~do~:
 \end{frame}
 % SLIDE  007
 \begin{frame}[fragile]
-\frametitle{Let's write some functions}
+\frametitle{Organizing Code in Modules}
+Let's create a module ~PokerHand~ in a file named \emph{PokerHand.hs}:
+\lstH{029a}
+and use it in the Specs script:
+\lstT{029b}
 Write a function \emph{response} that passes this test:
 \lstT{007}
 %stopzone
@@ -296,7 +300,7 @@ snd ('A', True) \rk
 \begin{frame}[fragile]
 \frametitle{a way to think about the problem}
 Let's define types synonyms:
-\lstH{012}
+\lstH{022}
 And a new function from ~String~ to ~Card~:
 \begin{haskell}
 card :: String -> Card
@@ -334,13 +338,13 @@ But:
 % SLIDE  025
 \begin{frame}[fragile]
 \frametitle{Type Class = a way to define type conformity}
-Saying that
+Here's a new type:
 \begin{haskell}
 data Rank = Two | Three | Four | Five | Six | Seven | Eight 
           | Nine | Ten | Jack | Queen | King | Ace
     deriving (Eq, Ord, Enum, Show)
 \end{haskell}
-means that values of type ~Rank~ 
+Using ~deriving (Eq, Ord, Enum,  Show)~ means that values of type ~Rank~ 
 \begin{itemize}
 \item  can be compared with ~==~ and ~/=~ 
 \item  can be compared with ~compare~, ~$<$~, ~$<$=~ ...
@@ -408,11 +412,8 @@ We have our first feature: comparing cards\\
 \end{frame}
 % SLIDE  029
 \begin{frame}[fragile]
-\frametitle{Organizing Code in Modules}
-Let's move the production code into its own \emph{module}:
-\lstH{029a}
-and use it in the Specs script:
-\lstT{029b}
+\frametitle{}
+(this slide intentionally left blank)
 \end{frame}
 % SLIDE  030
 \begin{frame}[fragile]

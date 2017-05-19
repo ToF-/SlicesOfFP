@@ -14,7 +14,7 @@ do
         then
         cat imports.hs $file $solutionFile | runhaskell || exit 2
         else
-            runhaskell $file || exit 1
+            runhaskell  $file || exit 1
         fi
     fi
 done

@@ -233,7 +233,6 @@ unless we rewrite ~compare~
 \begin{frame}[fragile]
 \frametitle{How to compare cards by rank ?}
 Write a function ~rank~ that passes this test:
-\vs
 \lstT{017}
 Hint:
 \begin{haskell}
@@ -241,6 +240,8 @@ rank ['A',_] = 14
 rank ['K',_] = 13
     . . .
 \end{haskell}
+Hint:
+The function \texttt{Data.Char.digitToInt} can be of help
 \end{frame}
 % SLIDE  018
 \begin{frame}[fragile]

@@ -2,7 +2,7 @@ tables qui tournent le dos à l'écran
 cabal install hspec (again)
 slide 6 f $ x y z => g x y z
 refactor du code des slides pour nettoyer le bazar d'avant prez :p
-le module PockerHands existe déjà dans le dossier code. Les participants doivent le nommer autrement.
+le module PokerHands existe déjà dans le dossier code. Les participants doivent le nommer autrement.
 Digit to int slide 17 ?
 flip chart à la liste du matos
 prevenir de ne pas être en retard

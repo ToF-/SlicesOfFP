@@ -9,5 +9,5 @@ prevenir de ne pas être en retard
 bonbons pour le bingo
 slide sur quotes et back quotes
 slide sur digitToInt
-pour chaque snippet en press boutton on a le code complet du slide
+pour chaque snippet en press boutton on a le code complet du slide (a dumb idea)
 faciliter l'install de haskell et de hspec

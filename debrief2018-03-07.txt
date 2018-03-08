@@ -1,0 +1,5 @@
+Décomposer les fonctionnalités pour justifier l'avancement
+Par exemple :
+Première étape, comparer deux mains en carte la plus forte => il faut comparer deux cartes => problème des types
+Revoir de manière plus "carpaccio" ?
+Du coup la fonction suit arriverai plus tard.
